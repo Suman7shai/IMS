@@ -1,0 +1,1 @@
+This is basically our BCA 4th semester project currently based on syllabus provided by Tribhuwan University. This is the code for Inventory Management System (IMS) which manages the products in a particular store which alerts the low stock message.
