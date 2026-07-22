@@ -1,61 +1,77 @@
-create database if not exists inventory_management_system;
+CREATE DATABASE IF NOT EXISTS inventory_management_system;
 
-use inventory_management_system;
+USE inventory_management_system;
 
-create table users(
-	id int auto_increment primary key,
-    username varchar(50) unique not null,
-    password varchar(30) not null,
-    full_name varchar(50) not null,
-    email varchar(50),
-    role enum('admin','staff') not null default 'admin',
-    created_at timestamp,
-    updated_at timestamp
+-- 1. Users
+CREATE TABLE users (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    username    VARCHAR(50) UNIQUE NOT NULL,
+    password    VARCHAR(255) NOT NULL,           -- fixed: hashed password needs 255
+    full_name   VARCHAR(100) NOT NULL,
+    email       VARCHAR(100),
+    role        ENUM('admin','staff') NOT NULL DEFAULT 'staff',  -- fixed: default staff
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-
-create table suppliers(
-	id int auto_increment primary key,
-    name varchar(150) not null,
-    contact_person varchar(100),
-    email varchar(100),
-    phone varchar(20),
-    address varchar(50),
-    created_at timestamp,
-    updated_at timestamp
+-- 2. Categories (new — replaces plain varchar in products)
+CREATE TABLE categories (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(100) NOT NULL,
+    description TEXT,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-
-create table products (
-	id int auto_increment primary key,
-    name varchar(150) not null,
-    description text,
-    category varchar(100),
-    price decimal(10,2) not null default 0.00,
-    quantity int not null default 0,
-    low_stock_threshold int not null default 10,
-    supplier_id int,
-    created_at timestamp,
-    updated_at timestamp,
-    foreign key (supplier_id) references suppliers(id) on delete set null
+-- 3. Suppliers
+CREATE TABLE suppliers (
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    name            VARCHAR(150) NOT NULL,
+    contact_person  VARCHAR(100),
+    email           VARCHAR(100),
+    phone           VARCHAR(20),
+    address         VARCHAR(255),                -- fixed: 50 is too short for address
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-
-create table txns (
-	id int not null,
-    product_id int not null,
-    type enum('in','out') not null,
-    quantity int not null,
-    unit_price decimal(10,2),
-    total_price decimal(10,2),
-    notes text,
-    user_id int,
-    txn_date timestamp,
-    foreign key (product_id) references products(id) on delete cascade,
-    foreign key (user_id) references users(id) on delete set null
+-- 4. Products
+CREATE TABLE products (
+    id                  INT AUTO_INCREMENT PRIMARY KEY,
+    name                VARCHAR(150) NOT NULL,
+    description         TEXT,
+    category_id         INT,                     -- fixed: FK to categories table
+    price               DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    quantity            INT NOT NULL DEFAULT 0,
+    low_stock_threshold INT NOT NULL DEFAULT 10,
+    supplier_id         INT,
+    created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL,
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(id) ON DELETE SET NULL
 );
 
+-- 5. Transactions
+CREATE TABLE txns (
+    id          INT AUTO_INCREMENT PRIMARY KEY,  -- fixed: was missing AUTO_INCREMENT PK
+    product_id  INT NOT NULL,
+    type        ENUM('in','out') NOT NULL,
+    quantity    INT NOT NULL,
+    unit_price  DECIMAL(10,2),
+    total_price DECIMAL(10,2),
+    notes       TEXT,
+    user_id     INT,
+    txn_date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id)    REFERENCES users(id)    ON DELETE SET NULL
+);
 
-insert into users (username, password, full_name, email, role)
-values ('admin', 'Admin123', 'Administrator', 'admin63@gmail.com', 'admin');
-
+-- Insert default admin (password = "Admin123" hashed properly)
+INSERT INTO users (username, password, full_name, email, role)
+VALUES (
+    'admin',
+    '$2y$10$8tGGEHBqFmgMgMkDQIZgp.0v7rRDXwkpGWMvmIDCNJBlPdm4ZLcpG',
+    'Administrator',
+    'admin63@gmail.com',
+    'admin'
+);
