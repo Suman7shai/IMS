@@ -6,15 +6,15 @@ USE inventory_management_system;
 CREATE TABLE users (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     username    VARCHAR(50) UNIQUE NOT NULL,
-    password    VARCHAR(255) NOT NULL,           -- fixed: hashed password needs 255
+    password    VARCHAR(255) NOT NULL,           
     full_name   VARCHAR(100) NOT NULL,
     email       VARCHAR(100),
-    role        ENUM('admin','staff') NOT NULL DEFAULT 'staff',  -- fixed: default staff
+    role        ENUM('admin','staff') NOT NULL DEFAULT 'staff',  
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- 2. Categories (new — replaces plain varchar in products)
+-- 2. Categories 
 CREATE TABLE categories (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE suppliers (
     contact_person  VARCHAR(100),
     email           VARCHAR(100),
     phone           VARCHAR(20),
-    address         VARCHAR(255),                -- fixed: 50 is too short for address
+    address         VARCHAR(255),                
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -40,7 +40,7 @@ CREATE TABLE products (
     id                  INT AUTO_INCREMENT PRIMARY KEY,
     name                VARCHAR(150) NOT NULL,
     description         TEXT,
-    category_id         INT,                     -- fixed: FK to categories table
+    category_id         INT,                     
     price               DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     quantity            INT NOT NULL DEFAULT 0,
     low_stock_threshold INT NOT NULL DEFAULT 10,
@@ -53,7 +53,7 @@ CREATE TABLE products (
 
 -- 5. Transactions
 CREATE TABLE txns (
-    id          INT AUTO_INCREMENT PRIMARY KEY,  -- fixed: was missing AUTO_INCREMENT PK
+    id          INT AUTO_INCREMENT PRIMARY KEY,  
     product_id  INT NOT NULL,
     type        ENUM('in','out') NOT NULL,
     quantity    INT NOT NULL,
