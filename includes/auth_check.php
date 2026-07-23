@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /index.php");
+    header("Location: http://localhost:8080/Project_IMS/index.php");
     exit;
 }
 ?>

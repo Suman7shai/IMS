@@ -378,4 +378,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     refreshUI();
+
+
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+        window.location.href = 'http://localhost:8080/Project_IMS/auth/logout.php';
+    }
+});
 });

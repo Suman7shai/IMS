@@ -1,10 +1,15 @@
+<?php
+require 'includes/auth_check.php';
+require 'includes/db.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IMS</title>
-    <link rel="stylesheet" href="./dashboard.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
 </head>
 <body>
     <div class="dashboard-layout">
@@ -178,6 +183,6 @@
         </div>
     </div>
 
-    <script src="./dashboard.js"></script>
+    <script src="/Project_IMS/assests/js/dashboard.js"></script>
 </body>
 </html>
