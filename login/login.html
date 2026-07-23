@@ -7,16 +7,28 @@
     <link rel="stylesheet" href="./css/login.css">
 </head>
 <body>
-    <main>
-        <h1 class="form-title">Login Page</h1>
-        <form action="dashboard.html" method="post">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required><br><br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required><br><br>
-            <button type="submit">Login</button>
-        
-        </form>
+    <main class="auth-shell">
+        <section class="auth-card">
+            <div class="auth-copy">
+                <p class="eyebrow">Welcome back</p>
+                <h1 class="form-title">Login</h1>
+                <p class="auth-text">Enter your username and password to access your dashboard</p>
+            </div>
+
+            <form class="auth-form" action="../dashboard.html" method="post">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+                <label for="password">Password</label>  
+                <div class="password-field">
+                    <input type="password" id="password" name="password" required>
+
+                </div>
+
+                <button type="submit" class="primary-btn" id="login-btn">Login</button>
+            </form>
+        </section>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="./js/logic.js"></script>
 </body>
 </html>
