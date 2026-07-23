@@ -2,7 +2,7 @@
 
 session_start();
 
-require '../includes/db.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';  
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $username = trim($_POST['username']);
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
   if($user && password_verify($password, $user['password'])){
-    $_SESSION['user_id'] = $user['user_id'];
+    $_SESSION['user_id'] = $user['id'];
     $_SESSION['username'] = $user['username'];
     $_SESSION['full_name'] = $user['full_name'];
     $_SESSION['role'] = $user['role'];
