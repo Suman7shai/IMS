@@ -11,10 +11,10 @@ loginForm.addEventListener("submit", (e) => {
         return;
     }
 
-    if (username === "admin" && password === "admin") {
-        window.location.href = "../dashboard.html";
-        return;
-    }
+    // if (username === "admin" && password === "admin") {
+    //     window.location.href = "../dashboard.html";
+    //     return;
+    // }
 
     showError("Username or password is incorrect.");
 });
