@@ -312,10 +312,9 @@ document.addEventListener('DOMContentLoaded', () => {
         product.stock -= quantity;
 
         sales.unshift({
-            id: cry
-            pto.randomUUID(),
+            id: crypto.randomUUID(),
             productId: product.id,
-           fx  productName: product.name,
+            productName: product.name,
             quantity,
             stockAfter: product.stock,
             timestamp: new Date().toISOString()
