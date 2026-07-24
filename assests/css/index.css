@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
 *{
     margin: 0;
     padding: 0;
@@ -11,7 +13,7 @@
     --muted: #475569;
 }
 body{
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', Arial, sans-serif;
     background:
         radial-gradient(circle at top left, rgba(255, 255, 255, 0.95), transparent 30%),
         radial-gradient(circle at bottom right, rgba(255, 229, 196, 0.55), transparent 28%),
@@ -32,6 +34,23 @@ body{
     justify-content: center;
     position: relative;
     perspective: 1200px;
+    padding-top: 90px;
+}
+
+.brand-title{
+    position: absolute;
+    top: -100px;
+    left: 51%;
+    transform: translateX(-50%);
+    font-family: 'poppins', Arial, sans-serif;
+    font-size: clamp(8.2rem, 4.6vw, 4rem);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-shadow: 0 6px 18px rgba(15, 23, 42, 0.24);
+    animation: colorSwitch 3.5s ease-in-out infinite;
+    z-index: 2;
 }
 
 .auth-shell::before,
@@ -234,5 +253,20 @@ input[type="text"]:focus, input[type="password"]:focus{
     to{
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes colorSwitch{
+    0%, 100%{
+        color: #ffffff;
+    }
+    25%{
+        color: #ffe082;
+    }
+    50%{
+        color: #a7f3d0;
+    }
+    75%{
+        color: #f9a8d4;
     }
 }
