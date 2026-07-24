@@ -37,7 +37,7 @@ if (isset($_SESSION['user_id'])) {
                 <input type="text" id="username" name="username" required autocomplete="off">
                 <label for="password">Password</label>  
                 <div class="password-field">
-                    <input type="password" id="password" name="password" required autocomplete="off">>
+                    <input type="password" id="password" name="password" required autocomplete="off">
 
                 </div>
 

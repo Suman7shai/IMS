@@ -25,6 +25,11 @@ body {
     scroll-behavior: smooth;
 }
 
+.page-shell {
+    width: min(1200px, 100%);
+    margin: 0 auto;
+}
+
 #manage-product {
     display: grid;
     gap: 16px;
@@ -68,7 +73,7 @@ body {
 }
 
 #manage-product .stack-form input {
-    width: 100%;
+    width: 95%;
     min-height: 48px;
     border: 1px solid var(--line);
     border-radius: 14px;
@@ -102,10 +107,34 @@ body {
     min-height: 48px;
 }
 
+#manage-product .secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--ink);
+    
+}
+
 #manage-product .primary-btn {
-    background: #0f766e;
+    min-height: 48px;
+    background: linear-gradient(160deg, #0f766e, #14b8a6);
+    border: 1px solid rgba(15, 118, 110, 0.35);
+    border-radius: 14px;
     color: #fff;
+    font-weight: 600;
     box-shadow: 0 12px 24px rgba(15, 118, 110, 0.28);
+    cursor: pointer;
+}
+#manage-product .secondary1-btn {
+    width: 100px;
+    background: linear-gradient(160deg, #0f766e, #14b8a6);
+    border: 1px solid rgba(15, 118, 110, 0.35);
+    border-radius: 14px;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 12px 24px rgba(15, 118, 110, 0.28);
+    cursor: pointer;
 }
 
 #manage-product .primary-btn:hover {
