@@ -88,15 +88,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateHeaderTime() {
+        const now = new Date();
+
         els.currentDate.textContent = new Intl.DateTimeFormat('en-US', {
             weekday: 'short',
             month: 'short',
             day: 'numeric',
-            year: 'numeric'
-        }).format(new Date());
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            second: '2-digit'
+        }).format(now);
 
         const updated = localStorage.getItem(storageKeys.updated);
-        els.lastUpdated.textContent = updated ? formatDateTime(updated) : '--';
+        els.lastUpdated.textContent = updated ? formatDateTime(updated) : formatDateTime(now);
     }
 
     function getFilteredProducts() {
@@ -176,6 +181,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderSaleOptions() {
+        if (!els.saleProduct || !els.saleQuantity) {
+            return;
+        }
+
         const options = products
             .map((product) => `<option value="${product.id}">${escapeHtml(product.name)} (${product.stock})</option>`)
             .join('');
@@ -243,93 +252,100 @@ document.addEventListener('DOMContentLoaded', () => {
         updateHeaderTime();
     }
 
-    els.productForm.addEventListener('submit', (event) => {
-        event.preventDefault();
+    if (els.productForm) {
+        els.productForm.addEventListener('submit', (event) => {
+            event.preventDefault();
 
-        const name = els.productName.value.trim();
-        const category = els.productCategory.value.trim();
-        const price = Number(els.productPrice.value);
-        const stock = Number(els.productStock.value);
-        const existingId = els.productId.value;
+            const name = els.productName.value.trim();
+            const category = els.productCategory.value.trim();
+            const price = Number(els.productPrice.value);
+            const stock = Number(els.productStock.value);
+            const existingId = els.productId.value;
 
-        if (!name || !category || Number.isNaN(price) || Number.isNaN(stock)) {
-            showMessage('Please complete all product fields.');
-            return;
-        }
+            if (!name || !category || Number.isNaN(price) || Number.isNaN(stock)) {
+                showMessage('Please complete all product fields.');
+                return;
+            }
 
-        if (existingId) {
-            products = products.map((product) => {
-                if (product.id !== existingId) {
-                    return product;
-                }
+            if (existingId) {
+                products = products.map((product) => {
+                    if (product.id !== existingId) {
+                        return product;
+                    }
 
-                return {
-                    ...product,
+                    return {
+                        ...product,
+                        name,
+                        category,
+                        price,
+                        stock
+                    };
+                });
+            } else {
+                products.unshift({
+                    id: crypto.randomUUID(),
                     name,
                     category,
                     price,
                     stock
-                };
-            });
-        } else {
-            products.unshift({
-                id: crypto.randomUUID(),
-                name,
-                category,
-                price,
-                stock
-            });
-        }
+                });
+            }
 
-        clearForm();
-        refreshUI();
-    });
-
-    els.clearFormBtn.addEventListener('click', clearForm);
-
-    els.saleForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const productId = els.saleProduct.value;
-        const quantity = Number(els.saleQuantity.value);
-        const product = products.find((item) => item.id === productId);
-
-        if (!product) {
-            showMessage('Select a valid product.');
-            return;
-        }
-
-        if (!quantity || quantity < 1) {
-            showMessage('Enter a valid quantity.');
-            return;
-        }
-
-        if (product.stock < quantity) {
-            showMessage('Not enough stock for this sale.');
-            return;
-        }
-
-        product.stock -= quantity;
-
-        sales.unshift({
-            id: crypto.randomUUID(),
-            productId: product.id,
-            productName: product.name,
-            quantity,
-            stockAfter: product.stock,
-            timestamp: new Date().toISOString()
+            clearForm();
+            refreshUI();
         });
+    }
 
-        els.saleQuantity.value = 1;
-        refreshUI();
-        showMessage(`Sale completed. ${quantity} unit(s) removed from stock.`);
-    });
+    if (els.clearFormBtn) {
+        els.clearFormBtn.addEventListener('click', clearForm);
+    }
 
-    els.productTableBody.addEventListener('click', (event) => {
-        const button = event.target.closest('[data-action]');
-        if (!button) {
-            return;
-        }
+    if (els.saleForm) {
+        els.saleForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const productId = els.saleProduct.value;
+            const quantity = Number(els.saleQuantity.value);
+            const product = products.find((item) => item.id === productId);
+
+            if (!product) {
+                showMessage('Select a valid product.');
+                return;
+            }
+
+            if (!quantity || quantity < 1) {
+                showMessage('Enter a valid quantity.');
+                return;
+            }
+
+            if (product.stock < quantity) {
+                showMessage('Not enough stock for this sale.');
+                return;
+            }
+
+            product.stock -= quantity;
+
+            sales.unshift({
+                id: crypto.randomUUID(),
+                productId: product.id,
+                productName: product.name,
+                quantity,
+                stockAfter: product.stock,
+                timestamp: new Date().toISOString()
+            });
+
+            els.saleQuantity.value = 1;
+            refreshUI();
+            showMessage(`Sale completed. ${quantity} unit(s) removed from stock.`);
+        });
+    }
+
+    if (els.productTableBody) {
+        els.productTableBody.addEventListener('click', (event) => {
+            const button = event.target.closest('[data-action]');
+            if (!button) {
+                return;
+            }
 
         const { action, id } = button.dataset;
         const product = products.find((item) => item.id === id);
@@ -337,53 +353,63 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (action === 'edit') {
-            fillForm(product);
-            return;
-        }
+            if (action === 'edit') {
+                fillForm(product);
+                return;
+            }
 
-        if (action === 'sell') {
-            els.saleProduct.value = id;
-            els.saleQuantity.value = 1;
-            els.saleForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            return;
-        }
+            if (action === 'sell' && els.saleForm && els.saleProduct && els.saleQuantity) {
+                els.saleProduct.value = id;
+                els.saleQuantity.value = 1;
+                els.saleForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
 
-        if (action === 'delete') {
-            const confirmed = confirm(`Delete ${product.name}? This cannot be undone.`);
+            if (action === 'delete') {
+                const confirmed = confirm(`Delete ${product.name}? This cannot be undone.`);
+                if (!confirmed) {
+                    return;
+                }
+
+                products = products.filter((item) => item.id !== id);
+                if (els.productId && els.productId.value === id) {
+                    clearForm();
+                }
+                refreshUI();
+            }
+        });
+    }
+
+    if (els.searchInput) {
+        els.searchInput.addEventListener('input', renderTable);
+    }
+
+    if (els.resetDemo) {
+        els.resetDemo.addEventListener('click', () => {
+            const confirmed = confirm('Reset dashboard to demo products?');
             if (!confirmed) {
                 return;
             }
 
-            products = products.filter((item) => item.id !== id);
-            if (els.productId.value === id) {
-                clearForm();
-            }
+            products = [...demoProducts];
+            sales = [];
+            clearForm();
             refreshUI();
-        }
-    });
-
-    els.searchInput.addEventListener('input', renderTable);
-
-    els.resetDemo.addEventListener('click', () => {
-        const confirmed = confirm('Reset dashboard to demo products?');
-        if (!confirmed) {
-            return;
-        }
-
-        products = [...demoProducts];
-        sales = [];
-        clearForm();
-        refreshUI();
-    });
+        });
+    }
 
     refreshUI();
 
+    setInterval(updateHeaderTime, 1000);
 
-    document.getElementById('logoutBtn').addEventListener('click', function(e) {
-    e.preventDefault();
-    if (confirm('Are you sure you want to logout?')) {
-        window.location.href = 'http://localhost:8080/Project_IMS/auth/logout.php';
+
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'http://localhost:8080/Project_IMS/auth/logout.php';
+            }
+        });
     }
-});
 });

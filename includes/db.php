@@ -2,7 +2,7 @@
 $db_host = "localhost";
 $db_name = "inventory_management_system";
 $db_username = "root";
-$db_password = "12345678";
+$db_password = "";
 
 try {
     $pdo = new PDO(

@@ -2,7 +2,7 @@
 
 session_start();
 
-require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/copy_db.php';  
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';  
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $username = trim($_POST['username']);
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
-  $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? AND is_active = 1");
+  $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
   $stmt->execute([$username]);
   $user = $stmt->fetch();
 
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['role'] = $user['role'];
     header("Location: /Project_IMS/dashboard.php");
   } else {
-    $_SESSION['error'] = "Invalid username or password";
+    $_SESSION['error'] = "Invalid username or password.";
     header("Location: /Project_IMS/index.php");
   }
   exit;

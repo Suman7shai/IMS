@@ -15,6 +15,10 @@ loginForm.addEventListener("submit", (e) => {
 window.addEventListener('load', function() {
     document.getElementById('username').value = '';
     document.getElementById('password').value = '';
+
+    // if (window.__LOGIN_ERROR) {
+    //     showError(window.__LOGIN_ERROR);
+    // }
 });
 
 function showError(message) {

@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE){
 }
 
 if (isset($_SESSION['user_id'])) {
-  header("Location: http://localhost:8080/Project_IMS/dashboard.php");
+    header("Location: /Project_IMS/dashboard.php");
   exit;
 }
 ?>
@@ -31,13 +31,16 @@ if (isset($_SESSION['user_id'])) {
             <form class="auth-form" action="/Project_IMS/auth/login.php" method="post" autocomplete="off">
                 <?php if (isset($_SESSION['error'])): ?>
                     <p style="color:red;"><?= htmlspecialchars($_SESSION['error']); ?></p>
+                    <!-- <script>
+                        window.__LOGIN_ERROR = <?= json_encode($_SESSION['error']); ?>;
+                    </script> -->
                     <?php unset($_SESSION['error']); ?>
                 <?php endif; ?>
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required autocomplete="off">
                 <label for="password">Password</label>  
                 <div class="password-field">
-                    <input type="password" id="password" name="password" required autocomplete="off">>
+                    <input type="password" id="password" name="password" required autocomplete="off">
 
                 </div>
 

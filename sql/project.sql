@@ -70,7 +70,7 @@ CREATE TABLE txns (
 INSERT INTO users (username, password, full_name, email, role)
 VALUES (
     'admin',
-    '$2y$10$8tGGEHBqFmgMgMkDQIZgp.0v7rRDXwkpGWMvmIDCNJBlPdm4ZLcpG',
+    '$2y$12$Yr7Xf8ANvItpWYI.gTS.ne6a1LUiuNWhS4jjeqpdI1spLLPCI53BW',
     'Administrator',
     'admin63@gmail.com',
     'admin'
