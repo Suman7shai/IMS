@@ -58,7 +58,6 @@ $products = $pdo->query("
                 <a href="#manage-product">Add / Edit</a>
                 <a href="#sales">Sell Product</a>
                 <a href="#activity">Activity</a>
-                <a href="../auth/logout.php">Logout</a>
             </nav>
 
             <div class="sidebar-footer">
