@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if (empty($username) || empty($password)){
     $_SESSION['error'] = 'All fields are required.';
-    header("Location: ../index.php");
+    header("Location: /Project_IMS/index.php");
     exit;
   }
 
@@ -24,10 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['username'] = $user['username'];
     $_SESSION['full_name'] = $user['full_name'];
     $_SESSION['role'] = $user['role'];
-    header("Location: http://localhost:8080/Project_IMS/dashboard.php");
+    header("Location: /Project_IMS/dashboard.php");
   } else {
     $_SESSION['error'] = "Invalid username or password";
-    header("Location: http://localhost:8080/Project_IMS/index.php");
+    header("Location: /Project_IMS/index.php");
   }
   exit;
 }
