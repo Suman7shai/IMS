@@ -8,15 +8,17 @@
         </div>
     </div>
 
-                    <form id="saleForm" class="stack-form">
-                        <label>
-                            Product
-                            <select id="saleProduct" required></select>
-                        </label>
-                        <label>
-                            Quantity Sold
-                            <input type="number" id="saleQuantity" min="1" step="1" value="1" required>
-                        </label>
-                        <button type="submit" class="primary-btn">Complete Sale</button>
-                    </form>
-                </article>
+    <form id="saleForm" class="stack-form">
+        <label>
+              Product
+             <select id="saleProduct" required></select>
+        </label>
+        <label>
+             Quantity Sold
+             <input type="number" id="saleQuantity" min="1" step="1" value="1" required>
+        </label>
+        <label>
+             <button type="submit" class="primary-btn">Complete Sale</button>
+        </label>
+    </form>
+</article>
