@@ -28,7 +28,7 @@ if (isset($_SESSION['user_id'])) {
                 <p class="auth-text">Enter your username and password to access your dashboard</p>
             </div>
 
-            <form class="auth-form" action="../dashboard.html" method="post">
+            <form class="auth-form" action="http://localhost:8080/Project_IMS/auth/login.php" method="post">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required>
                 <label for="password">Password</label>  
