@@ -28,16 +28,16 @@ if (isset($_SESSION['user_id'])) {
                 <p class="auth-text">Enter your username and password to access your dashboard</p>
             </div>
 
-            <form class="auth-form" action="/Project_IMS/auth/login.php" method="post">
+            <form class="auth-form" action="/Project_IMS/auth/login.php" method="post" autocomplete="off">
                 <?php if (isset($_SESSION['error'])): ?>
                     <p style="color:red;"><?= htmlspecialchars($_SESSION['error']); ?></p>
                     <?php unset($_SESSION['error']); ?>
                 <?php endif; ?>
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" name="username" required autocomplete="off">
                 <label for="password">Password</label>  
                 <div class="password-field">
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" required autocomplete="off">>
 
                 </div>
 
