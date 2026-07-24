@@ -24,10 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $_SESSION['username'] = $user['username'];
     $_SESSION['full_name'] = $user['full_name'];
     $_SESSION['role'] = $user['role'];
-    header("Location: ../dashboard.php");
+    header("Location: http://localhost:8080/Project_IMS/dashboard.php");
   } else {
     $_SESSION['error'] = "Invalid username or password";
-    header("Location: ../index.php");
+    header("Location: http://localhost:8080/Project_IMS/index.php");
   }
   exit;
 }
