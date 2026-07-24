@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -22,7 +26,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'poppins', sans-serif;
     min-height: 100vh;
     color: var(--ink);
     background:
@@ -219,9 +223,7 @@ body {
     font-weight: 700;
 }
 
-.search-box input,
-.stack-form input,
-.stack-form select {
+.search-box input {
     width: 100%;
     border: 1px solid var(--line);
     border-radius: 14px;
@@ -232,9 +234,7 @@ body {
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.search-box input:focus,
-.stack-form input:focus,
-.stack-form select:focus {
+.search-box input:focus {
     border-color: rgba(15, 118, 110, 0.45);
     box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.15);
     transform: translateY(-1px);
@@ -278,8 +278,12 @@ body {
 
 .dashboard-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.9fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: 22px;
+}
+
+.panel-table {
+    width: 100%;
 }
 
 .panel {
@@ -388,30 +392,6 @@ tbody tr:hover {
 .side-stack {
     display: grid;
     gap: 22px;
-}
-
-.stack-form {
-    display: grid;
-    gap: 14px;
-}
-
-.stack-form label {
-    display: grid;
-    gap: 8px;
-    color: var(--ink);
-    font-weight: 700;
-}
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-.form-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
 }
 
 .activity-panel {
