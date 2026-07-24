@@ -2,7 +2,7 @@
 
 session_start();
 
-require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';  
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/copy_db.php';  
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $username = trim($_POST['username']);
