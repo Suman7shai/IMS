@@ -10,13 +10,11 @@ loginForm.addEventListener("submit", (e) => {
         showError("Please fill in all fields!");
         return;
     }
+});
 
-    // if (username === "admin" && password === "admin") {
-    //     window.location.href = "../dashboard.html";
-    //     return;
-    // }
-
-    // showError("Username or password is incorrect.");
+window.addEventListener('load', function() {
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
 });
 
 function showError(message) {
