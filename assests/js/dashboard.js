@@ -44,16 +44,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let products = loadProducts();
     let sales = loadSales();
     
-    const dialog = document.getElementById('#manage-product');
 
-    function showAddEditForm() {
-        if(!dialog.open) {
-            dialog.showModal();
-        }
-        else {
-            dialog.close();
-        }
+
+// bahira (backdrop) click garda pani banda hunu parne
+dialog.addEventListener('click', (e) => {
+    const rect = dialog.getBoundingClientRect();
+    const clickedInsideDialog =
+        rect.top <= e.clientY && e.clientY <= rect.bottom &&
+        rect.left <= e.clientX && e.clientX <= rect.right;
+
+    if (!clickedInsideDialog) {
+        dialog.close();
     }
+});
 
     function loadProducts() {
         const saved = localStorage.getItem(storageKeys.products);

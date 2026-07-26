@@ -42,6 +42,8 @@ $products = $pdo->query("
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IMS</title>
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/modal.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/sale-modal.css">
 </head>
 <body>
     <div class="dashboard-layout">
@@ -56,7 +58,7 @@ $products = $pdo->query("
                 <a href="#overview">Overview</a>
                 <a href="#products">Products</a>
                 <button id="addEditBtn" onclick="showAddEditForm()">Add / Edit</button>
-                <a href="./sell_products.php">Sell Product</a>
+                <button id="saleBtn" onclick="showSaleForm()">Sell Product</button>
                 <a href="#activity">Activity</a>
             </nav>
 
@@ -157,41 +159,93 @@ $products = $pdo->query("
         </div>
     </div>
 <!-- Add edit form section -->
-    <article class="panel" id="manage-product">
-            <div class="panel-head">
-                <div>
-                    <p class="panel-tag">Add / Edit</p>
-                    <h2>Product Form</h2>
-                </div>
-                <a class="secondary-btn" href="/Project_IMS/dashboard.php">Back to Dashboard</a>
-            </div>
 
-            <form id="productForm" class="stack-form" autocomplete="off">
-                <input type="hidden" id="productId" value="">
-                <label>
-                    Product Name
-                    <input type="text" id="productName" required>
-                </label>
-                <label>
-                    Category
-                    <input type="text" id="productCategory" required>
-                </label>
-                <div class="form-row">
-                    <label>
-                        Price
-                        <input type="number" id="productPrice" min="0" step="0.01" required>
-                    </label>
-                    <label>
-                        Stock
-                        <input type="number" id="productStock" min="0" step="1" required>
-                    </label>
-                </div>
-                <div class="form-actions">
-                    <button type="submit" class="primary-btn" id="saveProductBtn">Save Product</button>
-                    <button type="button" class="secondary1-btn" id="clearFormBtn">Clear</button>
-                </div>
-            </form>
-        </article>
+<dialog class="panel" id="manage-product">
+    <div class="modal-head">
+        <h3>Product Form</h3>
+        <button type="button" onclick="closeAddEditForm()">&times;</button>
+    </div>
+
+    <form id="productForm" method="dialog">
+        <label>
+            Product Name
+            <input type="text" id="productName" required>
+        </label>
+        <label>
+            Category
+            <input type="text" id="productCategory" required>
+        </label>
+        <div class="form-row">
+            <label>
+                Price
+                <input type="number" id="productPrice" min="0" step="0.01" required>
+            </label>
+            <label>
+                Stock
+                <input type="number" id="productStock" min="0" step="1" required>
+            </label>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="primary-btn">Save Product</button>
+            <button type="button" class="secondary-btn" onclick="closeAddEditForm()">Cancel</button>
+        </div>
+    </form>
+    <script>
+        const dialog = document.getElementById('manage-product');
+
+        function showAddEditForm() {
+            if (!dialog.open) {
+            dialog.showModal();
+            }
+        }
+        function closeAddEditForm() {
+            dialog.close();
+        }
+    </script>
+</dialog>
+
+ <!-- sell_products dialog section -->
+<dialog class="panel" id="sale-product">
+    <div class="panel-head">
+         <div>
+            <p class="panel-tag">Sale</p>
+            <h2>Sell Product</h2>
+            <button type="button" onclick="closeSaleForm()">&times;</button>
+        </div>
+    </div>
+    <form id="saleForm" class="stack-form">
+        <label>
+          Product
+            <input type="search" id="saleProduct" required>           
+        </label>
+        <label>
+            Rate per Unit
+                <input type="number" id="saleRate" min="0" step="0.01" value="0.00" required>
+        </label>
+        <label>
+            Quantity Sold
+                <input type="number" id="saleQuantity" min="1" step="1" value="1" required>
+        </label>
+        <label>
+            Total Amount
+                <input type="number" id="saleTotal" min="0" step="0.01" value="0.00" readonly>
+        </label>
+            <button type="submit" class="primary-btn">Sale</button>
+            <button type="button" class="secondary-btn" onclick="closeSaleForm()">Cancel</button>
+    </form>
+    <script>
+        const saleDialog = document.getElementById('sale-product');
+
+        function showSaleForm() {
+            if (!saleDialog.open) {
+            saleDialog.showModal();
+            }
+        }
+        function closeSaleForm() {
+            saleDialog.close();
+        }
+    </script>
+</dialog>
     <script src="/Project_IMS/assests/js/dashboard.js"></script>
 </body>
 </html>
