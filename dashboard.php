@@ -55,7 +55,7 @@ $products = $pdo->query("
             <nav class="sidebar-nav" aria-label="Dashboard menu">
                 <a href="#overview">Overview</a>
                 <a href="#products">Products</a>
-                <a href="./add_edit.php">Add / Edit</a>
+                <button id="addEditBtn" onclick="showAddEditForm()">Add / Edit</button>
                 <a href="./sell_products.php">Sell Product</a>
                 <a href="#activity">Activity</a>
             </nav>
@@ -156,7 +156,42 @@ $products = $pdo->query("
         </section>
         </div>
     </div>
+<!-- Add edit form section -->
+    <article class="panel" id="manage-product">
+            <div class="panel-head">
+                <div>
+                    <p class="panel-tag">Add / Edit</p>
+                    <h2>Product Form</h2>
+                </div>
+                <a class="secondary-btn" href="/Project_IMS/dashboard.php">Back to Dashboard</a>
+            </div>
 
+            <form id="productForm" class="stack-form" autocomplete="off">
+                <input type="hidden" id="productId" value="">
+                <label>
+                    Product Name
+                    <input type="text" id="productName" required>
+                </label>
+                <label>
+                    Category
+                    <input type="text" id="productCategory" required>
+                </label>
+                <div class="form-row">
+                    <label>
+                        Price
+                        <input type="number" id="productPrice" min="0" step="0.01" required>
+                    </label>
+                    <label>
+                        Stock
+                        <input type="number" id="productStock" min="0" step="1" required>
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="primary-btn" id="saveProductBtn">Save Product</button>
+                    <button type="button" class="secondary1-btn" id="clearFormBtn">Clear</button>
+                </div>
+            </form>
+        </article>
     <script src="/Project_IMS/assests/js/dashboard.js"></script>
 </body>
 </html>
