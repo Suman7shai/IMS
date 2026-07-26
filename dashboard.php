@@ -3,20 +3,38 @@ require 'includes/auth_check.php';
 require 'includes/db.php';
 
 // Stats from database
-$total_products = $pdo->query("SELECT COUNT(*) as total FROM products")->fetch()['total'];
+$total_products = $pdo->query("
+    SELECT COUNT(*) as total 
+    FROM products
+")->fetch()['total'];
 
-$total_units = $pdo->query("SELECT SUM(quantity) as total FROM products")->fetch()['total'] ?? 0;
+$total_units = $pdo->query("
+    SELECT SUM(quantity) as total 
+    FROM products
+")->fetch()['total'] ?? 0;
 
 $low_stock = $pdo->query("
     SELECT COUNT(*) as total FROM products 
     WHERE quantity <= low_stock_threshold AND quantity > 0
 ")->fetch()['total'];
 
-$units_sold = $pdo->query("
-    SELECT SUM(quantity) as total FROM txns WHERE type = 'out'
-")->fetch()['total'] ?? 0;
 
-// Recent transactions
+if ($_SESSION['role'] === 'admin') {
+    $units_sold = $pdo->query("
+    SELECT SUM(quantity) as total
+    FROM txns WHERE type = 'out'
+")->fetch()['total'] ?? 0;
+}
+
+
+$low_stock_products = $pdo->query("
+    SELECT name, quantity, low_stock_threshold
+    FROM products 
+    WHERE quantity <= low_stock_threshold 
+    ORDER BY quantity ASC
+")->fetchAll();
+
+// Recent 5 transactions
 $recent_txns = $pdo->query("
     SELECT t.*, p.name as product_name, u.full_name
     FROM txns t
@@ -26,13 +44,6 @@ $recent_txns = $pdo->query("
     LIMIT 5
 ")->fetchAll();
 
-// Products list
-$products = $pdo->query("
-    SELECT p.*, c.name as category_name 
-    FROM products p
-    LEFT JOIN categories c ON p.category_id = c.id
-    ORDER BY p.id DESC
-")->fetchAll();
 ?>
 
 <!DOCTYPE html>
