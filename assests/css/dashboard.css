@@ -175,13 +175,18 @@ body {
 .header-metrics {
     display: grid;
     grid-template-columns: repeat(2, minmax(160px, 1fr));
-    gap: 14px;
+    gap: 8px;
 }
 
-.metric-card,
+.metric-card{
+    border-radius: 22px;
+    padding: 18px 20px;
+    min-width: 21vw;
+}
 .stat-card {
     border-radius: 22px;
     padding: 18px 20px;
+    min-width: 19vw;
 }
 
 .metric-card span,

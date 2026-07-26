@@ -43,6 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let products = loadProducts();
     let sales = loadSales();
+    
+    const dialog = document.getElementById('#manage-product');
+
+    function showAddEditForm() {
+        if(!dialog.open) {
+            dialog.showModal();
+        }
+        else {
+            dialog.close();
+        }
+    }
 
     function loadProducts() {
         const saved = localStorage.getItem(storageKeys.products);
