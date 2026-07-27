@@ -66,7 +66,7 @@ CREATE TABLE txns (
     FOREIGN KEY (user_id)    REFERENCES users(id)    ON DELETE SET NULL
 );
 
--- Insert default admin (password = "Admin123" hashed properly)
+-- Insert default admin (password = "Admin@123" hashed properly)
 INSERT INTO users (username, password, full_name, email, role)
 VALUES (
     'admin',
