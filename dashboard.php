@@ -55,6 +55,7 @@ $recent_txns = $pdo->query("
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/modal.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sale-modal.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
 </head>
 <body>
     <div class="dashboard-layout">
@@ -66,12 +67,54 @@ $recent_txns = $pdo->query("
             </div>
 
             <nav class="sidebar-nav" aria-label="Dashboard menu">
-                <a href="#overview">Overview</a>
-                <a href="#products">Products</a>
-                <button id="addEditBtn" onclick="showAddEditForm()">Add / Edit</button>
-                <button id="saleBtn" onclick="showSaleForm()">Sell Product</button>
-                <a href="#activity">Activity</a>
-            </nav>
+            <a href="#overview">Dashboard</a>
+            <div class="nav-item has-submenu">
+                <button type="button" class="nav-parent" aria-expanded="false">
+                    <span>Products</span>
+                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none">
+                        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <ul class="submenu">
+                    <li><a href="./products/add.php">Add Product</a></li>
+                    <li><a href="./products/edit.php">Edit Product</a></li>
+                    <li><a href="./products/delete.php">Delete Product</a></li>
+                    <li><a href="./products/list.php">List Products</a></li>
+                </ul>
+            </div>
+            <div class="nav-item has-submenu">
+                <button type="button" class="nav-parent" aria-expanded="false">
+                    <span>Catagories</span>
+                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none">
+                        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <ul class="submenu">
+                    <li><a href="./products/add.php">Add Catagories</a></li>
+                    <li><a href="./products/edit.php">Edit Catagories</a></li>
+                    <li><a href="./products/delete.php">Delete Catagories</a></li>
+                    <li><a href="./products/list.php">List Catagories</a></li>
+                </ul>
+            </div>
+            <div class="nav-item has-submenu">
+                <button type="button" class="nav-parent" aria-expanded="false">
+                    <span>Suppliers</span>
+                    <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none">
+                        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <ul class="submenu">
+                    <li><a href="./products/add.php">Add Suppliers</a></li>
+                    <li><a href="./products/edit.php">Edit Suppliers</a></li>
+                    <li><a href="./products/delete.php">Delete Suppliers</a></li>
+                    <li><a href="./products/list.php">List Suppliers</a></li>
+                </ul>
+            </div>
+            <a href="#">Stock In</a>
+            <a href="#">Stock Out</a>
+            <a href="#sales">Reports</a>
+            <a href="#activity">Activity</a>
+        </nav>
 
             <div class="sidebar-footer">
                 <span>Live Inventory</span>

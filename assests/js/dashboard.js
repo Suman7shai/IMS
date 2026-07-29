@@ -45,19 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let sales = loadSales();
     
 
-
-// bahira (backdrop) click garda pani banda hunu parne
-dialog.addEventListener('click', (e) => {
-    const rect = dialog.getBoundingClientRect();
-    const clickedInsideDialog =
-        rect.top <= e.clientY && e.clientY <= rect.bottom &&
-        rect.left <= e.clientX && e.clientX <= rect.right;
-
-    if (!clickedInsideDialog) {
-        dialog.close();
-    }
-});
-
     function loadProducts() {
         const saved = localStorage.getItem(storageKeys.products);
         if (!saved) {
@@ -427,4 +414,13 @@ dialog.addEventListener('click', (e) => {
             }
         });
     }
+});
+
+document.querySelectorAll('.nav-item.has-submenu').forEach((item) => {
+    const parentBtn = item.querySelector('.nav-parent');
+
+    parentBtn.addEventListener('click', () => {
+        const isOpen = item.classList.toggle('open');
+        parentBtn.setAttribute('aria-expanded', isOpen);
+    });
 });
