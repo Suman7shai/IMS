@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             year: 'numeric',
             hour: 'numeric',
             minute: '2-digit',
-            second: '2-digit'
+            // second: '2-digit'
         }).format(now);
 
         const updated = localStorage.getItem(storageKeys.updated);

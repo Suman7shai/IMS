@@ -186,7 +186,7 @@ body {
 .stat-card {
     border-radius: 22px;
     padding: 18px 20px;
-    min-width: 19vw;
+    min-width: 18vw;
 }
 
 .metric-card span,
@@ -206,7 +206,7 @@ body {
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
+    gap: 14px;
 }
 
 .toolbar {

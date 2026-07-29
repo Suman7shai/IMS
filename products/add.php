@@ -47,7 +47,6 @@ $editId = isset($_GET['edit']) ? trim($_GET['edit']) : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add / Edit Product</title>
-    <link rel="stylesheet" href="/Project_IMS/assests/css/add_edit.css">
 </head>
 <body>
     <main class="page-shell">

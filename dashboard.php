@@ -113,7 +113,7 @@ $recent_txns = $pdo->query("
             <a href="#">Stock In</a>
             <a href="#">Stock Out</a>
             <a href="#sales">Reports</a>
-            <a href="#activity">Activity</a>
+            <a href="#users">Users</a>
         </nav>
 
             <div class="sidebar-footer">
