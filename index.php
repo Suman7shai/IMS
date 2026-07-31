@@ -5,7 +5,7 @@ if (session_status() === PHP_SESSION_NONE){
 }
 
 if (isset($_SESSION['user_id'])) {
-  header("Location: http://localhost:8080/Project_IMS/dashboard.php");
+  header("Location: /Project_IMS/dashboard.php");
   exit;
 }
 ?>
@@ -20,7 +20,7 @@ if (isset($_SESSION['user_id'])) {
 </head>
 <body>
     <main class="auth-shell">
-        <h1 class="brand-title">Bhandarify</h1>
+        <h1 class="brand-title">StockSync</h1>
         <section class="auth-card">
             <div class="auth-copy">
                 <p class="eyebrow">Welcome back</p>

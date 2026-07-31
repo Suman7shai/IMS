@@ -128,7 +128,7 @@ $recent_txns = $pdo->query("
         <header class="dashboard-header">
             <div>
                 <p class="eyebrow">Inventory Management System</p>
-                <h1>Bhandarify</h1>
+                <h1>StockSync</h1>
                 <p class="subtitle">Manage products, update stock, and record sales in one place.</p>
             </div>
 
