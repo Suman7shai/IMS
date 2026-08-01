@@ -84,7 +84,7 @@ $recent_txns = $pdo->query("
             </div>
             <div class="nav-item has-submenu">
                 <button type="button" class="nav-parent" aria-expanded="false">
-                    <span>Catagories</span>
+                    <span>Categories</span>
                     <svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none">
                         <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
