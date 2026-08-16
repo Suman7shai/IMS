@@ -9,6 +9,12 @@ if (!isset($_SESSION['user_id'])) {
   exit;
 }
 
+if ($_SESSION['role'] !== 'admin') {
+  $_SESSION['error'] = "You do not have permission to access this page.";
+  header("Location: http://localhost:8080/Project_IMS/dashboard.php");
+  exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $name = trim($_POST['name']);
   $description = trim($_POST['description']);
