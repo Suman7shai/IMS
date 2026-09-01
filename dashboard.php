@@ -44,6 +44,14 @@ $recent_txns = $pdo->query("
     LIMIT 5
 ")->fetchAll();
 
+// Last transaction time
+$last_updated = $pdo->query("
+    SELECT txn_date 
+    FROM txns 
+    ORDER BY txn_date DESC 
+    LIMIT 1
+")->fetch()['txn_date'] ?? null;
+
 ?>
 
 <!DOCTYPE html>
@@ -54,8 +62,8 @@ $recent_txns = $pdo->query("
     <title>IMS</title>
     <link rel="stylesheet" href="/Project_IMS/assets/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assets/css/modal.css">
-    <link rel="stylesheet" href="/Project_IMS/assests/css/sale-modal.css">
-    <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
+    <link rel="stylesheet" href="/Project_IMS/assets/css/sale-modal.css">
+    <link rel="stylesheet" href="/Project_IMS/assets/css/sidebar-submenu.css">
 </head>
 <body>
     <div class="dashboard-layout">
@@ -121,7 +129,7 @@ $recent_txns = $pdo->query("
                 <strong>Stock updates instantly after sales.</strong>
             </div>
 
-            <button type="button" class="logout-btn" id="logoutBtn">Logout</button>
+            <button type="button" class="logout-btn" id="logoutBtn"><a href="auth/logout.php">Logout</a></button>
         </aside>
 
         <div class="dashboard-shell">
@@ -133,13 +141,19 @@ $recent_txns = $pdo->query("
             </div>
 
             <div class="header-metrics">
-                <div class="metric-card">
+                <!-- <div class="metric-card">
                     <span>Today</span>
                     <strong id="currentDate">--</strong>
-                </div>
+                </div> -->
                 <div class="metric-card">
-                    <span>Last update</span>
-                    <strong id="lastUpdated">--</strong>
+                    <span>Last Updated</span>
+                    <strong>
+                        <?php if ($last_updated): ?>
+                            <?= date('M d Y, h:i A', strtotime($last_updated)) ?>
+                        <?php else: ?>
+                            No transactions yet
+                        <?php endif; ?>
+                    </strong>
                 </div>
             </div>
         </header>
