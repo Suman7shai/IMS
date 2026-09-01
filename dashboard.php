@@ -77,8 +77,8 @@ $recent_txns = $pdo->query("
                 </button>
                 <ul class="submenu">
                     <li><a href="./products/add.php">Add Product</a></li>
-                    <li><a href="./products/edit.php">Edit Product</a></li>
-                    <li><a href="./products/delete.php">Delete Product</a></li>
+                    <!-- <li><a href="./products/edit.php">Edit Product</a></li>
+                    <li><a href="./products/delete.php">Delete Product</a></li> -->
                     <li><a href="./products/list.php">List Products</a></li>
                 </ul>
             </div>
@@ -91,8 +91,8 @@ $recent_txns = $pdo->query("
                 </button>
                 <ul class="submenu">
                     <li><a href="./categories/add.php">Add Categories</a></li>
-                    <li><a href="./categories/edit.php">Edit Categories</a></li>
-                    <li><a href="./categories/delete.php">Delete Categories</a></li>
+                    <!-- <li><a href="./categories/edit.php">Edit Categories</a></li>
+                    <li><a href="./categories/delete.php">Delete Categories</a></li> -->
                     <li><a href="./categories/list.php">List Categories</a></li>
                 </ul>
             </div>
@@ -104,9 +104,9 @@ $recent_txns = $pdo->query("
                     </svg>
                 </button>
                 <ul class="submenu">
+                    <!-- <li><a href="./suppliers/edit.php">Edit Suppliers</a></li>
+                    <li><a href="./suppliers/delete.php">Delete Suppliers</a></li> -->
                     <li><a href="./suppliers/add.php">Add Suppliers</a></li>
-                    <li><a href="./suppliers/edit.php">Edit Suppliers</a></li>
-                    <li><a href="./suppliers/delete.php">Delete Suppliers</a></li>
                     <li><a href="./suppliers/list.php">List Suppliers</a></li>
                 </ul>
             </div>
