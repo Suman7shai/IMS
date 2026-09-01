@@ -52,8 +52,8 @@ $recent_txns = $pdo->query("
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IMS</title>
-    <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
-    <link rel="stylesheet" href="/Project_IMS/assests/css/modal.css">
+    <link rel="stylesheet" href="/Project_IMS/assets/css/dashboard.css">
+    <link rel="stylesheet" href="/Project_IMS/assets/css/modal.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sale-modal.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
 </head>
