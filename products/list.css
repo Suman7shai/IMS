@@ -260,15 +260,6 @@ tbody tr:hover {
 }
 
 @media (max-width: 960px) {
-    .dashboard-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .sidebar {
-        position: static;
-        min-height: auto;
-    }
-
     .toolbar-form {
         grid-template-columns: 1fr 1fr;
     }

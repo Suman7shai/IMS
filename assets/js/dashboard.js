@@ -405,13 +405,72 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateHeaderTime, 1000);
 
 
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (confirm('Are you sure you want to logout?')) {
-                window.location.href = 'http://localhost:8080/Project_IMS/auth/logout.php';
+    const ensureLogoutButton = () => {
+        let logoutBtn = document.getElementById('logoutBtn');
+
+        if (!logoutBtn) {
+            logoutBtn = document.createElement('button');
+            logoutBtn.type = 'button';
+            logoutBtn.id = 'logoutBtn';
+            logoutBtn.className = 'logout-btn';
+            logoutBtn.textContent = 'Logout';
+
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.appendChild(logoutBtn);
+            } else {
+                logoutBtn.style.position = 'fixed';
+                logoutBtn.style.right = '20px';
+                logoutBtn.style.bottom = '20px';
+                document.body.appendChild(logoutBtn);
             }
+        }
+
+        return logoutBtn;
+    };
+
+    const logoutBtn = ensureLogoutButton();
+    const modalOverlay = document.getElementById('logoutModalOverlay') || (() => {
+        const overlay = document.createElement('div');
+        overlay.id = 'logoutModalOverlay';
+        overlay.className = 'logout-modal-overlay';
+        overlay.innerHTML = `
+            <div class="logout-modal" role="dialog" aria-modal="true" aria-labelledby="logoutModalTitle">
+                <div class="logout-modal-icon">⎋</div>
+                <h3 id="logoutModalTitle">Log out?</h3>
+                <p>Are you sure you want to sign out of your dashboard?</p>
+                <div class="logout-modal-actions">
+                    <button type="button" class="cancel-btn">Cancel</button>
+                    <button type="button" class="confirm-btn">Logout</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        return overlay;
+    })();
+
+    const hideLogoutModal = () => modalOverlay.classList.remove('show');
+
+    logoutBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        modalOverlay.classList.add('show');
+    });
+
+    modalOverlay.addEventListener('click', (event) => {
+        if (event.target === modalOverlay) {
+            hideLogoutModal();
+        }
+    });
+
+    const cancelBtn = modalOverlay.querySelector('.cancel-btn');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', hideLogoutModal);
+    }
+
+    const confirmBtn = modalOverlay.querySelector('.confirm-btn');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+            window.location.href = '/Project_IMS/auth/logout.php';
         });
     }
 });

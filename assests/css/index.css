@@ -22,35 +22,41 @@ body{
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    overflow: hidden;
-    padding: 16px;
+    overflow-x: hidden;
+    padding: 8px;
+}
+
+main.auth-shell {
+    width: 100%;
+    max-width: 920px;
 }
 
 .auth-shell{
-    width: min(920px, 100%);
-    min-height: 540px;
+    width: min(520px, 100%);
+    min-height: 150px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
     perspective: 1200px;
-    padding-top: 90px;
+    padding-top: 7px;
 }
 
 .brand-title{
-    position: absolute;
-    top: -100px;
-    left: 51%;
-    transform: translateX(-50%);
+    position: static;
+    transform: none;
+    margin-bottom: 5px;
     font-family: 'poppins', Arial, sans-serif;
-    font-size: clamp(8.2rem, 4.6vw, 4rem);
+    font-size: clamp(7rem, 7vw, 5rem);
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: #ffffff;
     text-shadow: 0 6px 18px rgba(15, 23, 42, 0.24);
     animation: colorSwitch 3.5s ease-in-out infinite;
     z-index: 2;
+    text-align: center;
 }
 
 .auth-shell::before,
@@ -65,7 +71,7 @@ body{
 
 .auth-shell::before{
     width: 180px;
-    height: 180px;
+    height: 150px;
     top: -20px;
     left: 8%;
 }
@@ -79,10 +85,10 @@ body{
 }
 
 .auth-card{
-    width: 100%;
-    height: 50vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    width: min(100%, 480px);
+    min-height: 450px;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     border-radius: 28px;
     box-shadow: 0 30px 70px rgba(15, 23, 42, 0.28);
@@ -92,11 +98,11 @@ body{
 
 .auth-copy,
 .auth-form{
-    padding: 48px;
+    padding: 38px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 12px;
+    gap: 8px;
 }
 
 .auth-copy{
@@ -211,17 +217,38 @@ input[type="text"]:focus, input[type="password"]:focus{
 }
 
 @media (max-width: 860px){
+    body {
+        padding: 16px 12px 24px;
+        align-items: flex-start;
+    }
+
     .auth-shell{
+        width: 100%;
         min-height: auto;
+        padding-top: 12px;
+        display: flex;
+        gap: 18px;
+    }
+
+    .brand-title{
+        margin: 0;
+        font-size: clamp(2.6rem, 10vw, 4rem);
+        line-height: 1;
+        letter-spacing: 0.05em;
     }
 
     .auth-card{
-        grid-template-columns: 1fr;
+        width: 100%;
+        min-height: 0;
     }
 
     .auth-copy,
     .auth-form{
-        padding: 34px 26px;
+        padding: 30px 24px;
+    }
+
+    .auth-form {
+        gap: 12px;
     }
 }
 
@@ -233,6 +260,33 @@ input[type="text"]:focus, input[type="password"]:focus{
 
     .auth-shell{
         width: 100%;
+        padding-top: 6px;
+        gap: 12px;
+    }
+
+    .brand-title{
+        font-size: clamp(2.2rem, 15vw, 3.4rem);
+        letter-spacing: 0.04em;
+        margin-bottom: 0;
+    }
+
+    .form-title{
+        font-size: 2.1rem;
+    }
+
+    .auth-copy,
+    .auth-form{
+        padding: 22px 18px;
+    }
+
+    .primary-btn {
+        width: 100%;
+        display: block;
+        margin-top: 8px;
+    }
+
+    .auth-text {
+        max-width: none;
     }
 }
 

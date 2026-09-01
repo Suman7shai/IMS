@@ -132,16 +132,6 @@ body {
     border-color: rgba(239, 68, 68, 0.2);
 }
 
-@media (max-width: 900px) {
-    .dashboard-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .sidebar {
-        position: static;
-        min-height: auto;
-    }
-}
 
 @media (max-width: 640px) {
     body {

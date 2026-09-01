@@ -21,34 +21,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = trim($_POST['email']);
   $phone = trim($_POST['phone']);
   $address = trim($_POST['address']);
-  
+
   if (empty($name)) {
     $_SESSION['error'] = "Supplier name is required.";
-    header("Location: edit.php");
+    header("Location: edit.php?id=" . $id);
     exit;
   }
 
   $stmt = $pdo->prepare("UPDATE suppliers SET name = ?, contact_person = ?, email = ?, phone = ?, address = ? WHERE id = ?");
   $stmt->execute([$name, $contact_person, $email, $phone, $address, $id]);
 
-
-  $_SESSION['success'] = "Suppliers details updated successfully";
-  header("Location: edit.php");
+  $_SESSION['success'] = "Supplier details updated successfully";
+  header("Location: list.php");
   exit;
 }
-
 
 if(!isset($_GET['id'])) {
   header("Location: list.php");
   exit;
 }
 
-
 $id = $_GET['id'];
 $stmt = $pdo->prepare("SELECT * FROM suppliers WHERE id = ?");
 $stmt->execute([$id]);
 $supplier = $stmt->fetch();
-
 
 if(!$supplier) {
   $_SESSION['error'] = "Supplier not found.";
