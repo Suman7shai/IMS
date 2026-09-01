@@ -314,6 +314,6 @@ $last_updated = $pdo->query("
         }
     </script>
 </dialog>
-    <script src="/Project_IMS/assests/js/dashboard.js"></script>
+    <script src="/Project_IMS/assets/js/dashboard.js"></script>
 </body>
 </html>
