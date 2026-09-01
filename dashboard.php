@@ -90,10 +90,10 @@ $recent_txns = $pdo->query("
                     </svg>
                 </button>
                 <ul class="submenu">
-                    <li><a href="./products/add.php">Add Catagories</a></li>
-                    <li><a href="./products/edit.php">Edit Catagories</a></li>
-                    <li><a href="./products/delete.php">Delete Catagories</a></li>
-                    <li><a href="./products/list.php">List Catagories</a></li>
+                    <li><a href="./categories/add.php">Add Categories</a></li>
+                    <li><a href="./categories/edit.php">Edit Categories</a></li>
+                    <li><a href="./categories/delete.php">Delete Categories</a></li>
+                    <li><a href="./categories/list.php">List Categories</a></li>
                 </ul>
             </div>
             <div class="nav-item has-submenu">
@@ -104,16 +104,16 @@ $recent_txns = $pdo->query("
                     </svg>
                 </button>
                 <ul class="submenu">
-                    <li><a href="./products/add.php">Add Suppliers</a></li>
-                    <li><a href="./products/edit.php">Edit Suppliers</a></li>
-                    <li><a href="./products/delete.php">Delete Suppliers</a></li>
-                    <li><a href="./products/list.php">List Suppliers</a></li>
+                    <li><a href="./suppliers/add.php">Add Suppliers</a></li>
+                    <li><a href="./suppliers/edit.php">Edit Suppliers</a></li>
+                    <li><a href="./suppliers/delete.php">Delete Suppliers</a></li>
+                    <li><a href="./suppliers/list.php">List Suppliers</a></li>
                 </ul>
             </div>
-            <a href="#">Stock In</a>
-            <a href="#">Stock Out</a>
-            <a href="#sales">Reports</a>
-            <a href="#users">Users</a>
+            <a href="./transactions/stock_in.php">Stock In</a>
+            <a href="./transactions/stock_out.php">Stock Out</a>
+            <a href="./reports/index.php">Reports</a>
+            <a href="./users/list.php">Users</a>
         </nav>
 
             <div class="sidebar-footer">

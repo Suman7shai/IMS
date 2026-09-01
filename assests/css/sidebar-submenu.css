@@ -12,22 +12,27 @@
     justify-content: space-between;
     width: 100%;
     border: none;
-    background: none;
+    background: rgba(255, 255, 255, 0.06);
     font: inherit;
     text-align: left;
     cursor: pointer;
-    padding: 10px 14px;
-    border-radius: 10px;
-    color: inherit;
+    padding: 14px 16px;
+    border-radius: 14px;
+    color: #f8fafc;
+    font-weight: 700;
+    font-size: 1.03rem;
 }
 
 .sidebar-nav .nav-parent:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(94, 234, 212, 0.15);
+    border-color: rgba(94, 234, 212, 0.28);
 }
 
 .sidebar-nav .nav-parent .chevron {
     transition: transform 0.2s ease;
     flex-shrink: 0;
+    width: 16px;
+    height: 16px;
 }
 
 /* rotate the chevron when open */
@@ -38,33 +43,34 @@
 /* the submenu itself — collapsed by default, expands via max-height */
 .sidebar-nav .submenu {
     list-style: none;
-    margin: 0;
+    margin: 6px 0 0;
     padding: 0;
     max-height: 0;
     overflow: hidden;
-    gap: 4px;
+    gap: 6px;
     transition: max-height 0.25s ease;
 }
 
 .sidebar-nav .nav-item.open .submenu {
-    max-height: 220px; /* comfortably larger than the 4 items' total height */
+    max-height: 280px;
 }
 
 .sidebar-nav .submenu li {
-    margin-top: 5px;
+    margin-top: 6px;
 }
 
 .sidebar-nav .submenu a {
     display: block;
-    padding: 9px 14px 9px 30px; /* extra left indent to show hierarchy */
-    font-size: 0.92rem;
-    color: inherit;
+    padding: 12px 16px 12px 36px;
+    font-size: 0.96rem;
+    color: #f8fafc;
     text-decoration: none;
-    border-radius: 8px;
-    opacity: 0.85;
+    border-radius: 10px;
+    opacity: 0.9;
+    background: rgba(255, 255, 255, 0.04);
 }
 
 .sidebar-nav .submenu a:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(94, 234, 212, 0.12);
     opacity: 1;
 }
