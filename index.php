@@ -16,7 +16,7 @@ if (isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/Project_IMS/assets/css/index.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/index.css">
 </head>
 <body>
     <main class="auth-shell">

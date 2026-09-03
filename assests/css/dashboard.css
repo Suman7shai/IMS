@@ -484,7 +484,7 @@ tbody tr:hover {
     padding: 18px;
     text-align: center;
 }
-button.logout-btn {
+.logout-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -498,26 +498,27 @@ button.logout-btn {
     font-size: 0.96rem;
     font-weight: 800;
     cursor: pointer;
+    text-decoration: none;
     background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
     box-shadow: 0 16px 26px rgba(239, 68, 68, 0.28);
     transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
-button.logout-btn::before {
+.logout-btn::before {
     content: "⎋";
     font-size: 1.1rem;
     line-height: 1;
 }
 
-button.logout-btn:hover,
-button.logout-btn:focus-visible {
+.logout-btn:hover,
+.logout-btn:focus-visible {
     transform: translateY(-1px);
     box-shadow: 0 20px 32px rgba(239, 68, 68, 0.34);
     filter: brightness(1.04);
     outline: none;
 }
 
-button.logout-btn:active {
+.logout-btn:active {
     transform: translateY(0);
 }
 
@@ -535,6 +536,7 @@ button.logout-btn:active {
 
 .logout-modal-overlay.show {
     display: flex;
+    animation: logoutFadeIn 0.2s ease;
 }
 
 .logout-modal {
@@ -545,6 +547,11 @@ button.logout-btn:active {
     box-shadow: 0 30px 80px rgba(15, 23, 42, 0.28);
     padding: 28px 24px 22px;
     animation: modalSlideIn 0.2s ease;
+}
+
+.logout-modal:focus-visible {
+    outline: 3px solid rgba(20, 184, 166, 0.35);
+    outline-offset: 4px;
 }
 
 .logout-modal-icon {
@@ -586,6 +593,27 @@ button.logout-btn:active {
     font-weight: 700;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.logout-modal-actions button:hover,
+.logout-modal-actions button:focus-visible {
+    transform: translateY(-1px);
+}
+
+.logout-modal-actions .cancel-btn {
+    color: var(--ink);
+    background: rgba(15, 23, 42, 0.08);
+}
+
+.logout-modal-actions .confirm-btn {
+    color: #fff;
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    box-shadow: 0 10px 20px rgba(239, 68, 68, 0.22);
+}
+
+@keyframes logoutFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .logout-modal-actions .cancel-btn {

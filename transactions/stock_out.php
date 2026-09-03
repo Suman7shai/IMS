@@ -208,7 +208,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                 <span>Live Inventory</span>
                 <strong>Track outgoing stock with real-time updates.</strong>
             </div>
-            <button type="button" class="logout-btn" id="logoutBtn">Logout</button>
+            <a class="logout-btn" id="logoutBtn" href="/Project_IMS/auth/logout.php">Logout</a>
         </aside>
 
         <div class="dashboard-shell page-shell">

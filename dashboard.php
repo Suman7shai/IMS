@@ -60,10 +60,10 @@ $last_updated = $pdo->query("
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IMS</title>
-    <link rel="stylesheet" href="/Project_IMS/assets/css/dashboard.css">
-    <link rel="stylesheet" href="/Project_IMS/assets/css/modal.css">
-    <link rel="stylesheet" href="/Project_IMS/assets/css/sale-modal.css">
-    <link rel="stylesheet" href="/Project_IMS/assets/css/sidebar-submenu.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/modal.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/sale-modal.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
 </head>
 <body>
     <div class="dashboard-layout">
@@ -129,7 +129,7 @@ $last_updated = $pdo->query("
                 <strong>Stock updates instantly after sales.</strong>
             </div>
 
-            <button type="button" class="logout-btn" id="logoutBtn"><a href="auth/logout.php">Logout</a></button>
+            <a class="logout-btn" id="logoutBtn" href="/Project_IMS/auth/logout.php">Logout</a>
         </aside>
 
         <div class="dashboard-shell">
@@ -314,6 +314,6 @@ $last_updated = $pdo->query("
         }
     </script>
 </dialog>
-    <script src="/Project_IMS/assets/js/dashboard.js"></script>
+    <script src="/Project_IMS/assests/js/dashboard.js"></script>
 </body>
 </html>

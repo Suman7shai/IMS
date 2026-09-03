@@ -79,7 +79,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                 <a href="/Project_IMS/users/list.php">Users</a>
             </nav>
             <div class="sidebar-footer"><span>Live Inventory</span><strong>Stock updates instantly after sales.</strong></div>
-            <button type="button" class="logout-btn" id="logoutBtn">Logout</button>
+            <a class="logout-btn" id="logoutBtn" href="/Project_IMS/auth/logout.php">Logout</a>
         </aside>
 
         <div class="dashboard-shell page-shell">

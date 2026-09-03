@@ -293,7 +293,7 @@ function formatCurrency($amount) {
                 <strong>Reports generated from recent stock movements.</strong>
             </div>
 
-            <button type="button" class="logout-btn" id="logoutBtn">Logout</button>
+            <a class="logout-btn" id="logoutBtn" href="/Project_IMS/auth/logout.php">Logout</a>
         </aside>
 
         <div class="dashboard-shell report-page-shell">

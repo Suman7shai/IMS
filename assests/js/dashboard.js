@@ -500,11 +500,20 @@ document.addEventListener('DOMContentLoaded', () => {
         return overlay;
     })();
 
-    const hideLogoutModal = () => modalOverlay.classList.remove('show');
+    let previouslyFocusedElement;
+
+    const hideLogoutModal = () => {
+        modalOverlay.classList.remove('show');
+        if (previouslyFocusedElement) {
+            previouslyFocusedElement.focus();
+        }
+    };
 
     logoutBtn.addEventListener('click', function(e) {
         e.preventDefault();
+        previouslyFocusedElement = document.activeElement;
         modalOverlay.classList.add('show');
+        modalOverlay.querySelector('.cancel-btn').focus();
     });
 
     modalOverlay.addEventListener('click', (event) => {
@@ -521,9 +530,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmBtn = modalOverlay.querySelector('.confirm-btn');
     if (confirmBtn) {
         confirmBtn.addEventListener('click', () => {
-            window.location.href = '/Project_IMS/auth/logout.php';
+            window.location.href = logoutBtn.href || '/Project_IMS/auth/logout.php';
         });
     }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modalOverlay.classList.contains('show')) {
+            hideLogoutModal();
+        }
+    });
 });
 
 document.querySelectorAll('.nav-item.has-submenu').forEach((item) => {
