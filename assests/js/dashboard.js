@@ -545,6 +545,13 @@ document.querySelectorAll('.nav-item.has-submenu').forEach((item) => {
     const parentBtn = item.querySelector('.nav-parent');
 
     parentBtn.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item.has-submenu').forEach((otherItem) => {
+            if (otherItem !== item) {
+                otherItem.classList.remove('open');
+                otherItem.querySelector('.nav-parent').setAttribute('aria-expanded', 'false');
+            }
+        });
+
         const isOpen = item.classList.toggle('open');
         parentBtn.setAttribute('aria-expanded', isOpen);
     });

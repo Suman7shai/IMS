@@ -90,6 +90,7 @@ $last_updated = $pdo->query("
                     <li><a href="./products/list.php">List Products</a></li>
                 </ul>
             </div>
+            <?php if ($_SESSION['role'] === 'admin'): ?>
             <div class="nav-item has-submenu">
                 <button type="button" class="nav-parent" aria-expanded="false">
                     <span>Categories</span>
@@ -118,10 +119,13 @@ $last_updated = $pdo->query("
                     <li><a href="./suppliers/list.php">List Suppliers</a></li>
                 </ul>
             </div>
+            <?php endif; ?>
             <a href="./transactions/stock_in.php">Stock In</a>
             <a href="./transactions/stock_out.php">Stock Out</a>
             <a href="./reports/index.php">Reports</a>
+            <?php if ($_SESSION['role'] === 'admin'): ?>
             <a href="./users/list.php">Users</a>
+            <?php endif; ?>
         </nav>
 
             <div class="sidebar-footer">
