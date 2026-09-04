@@ -165,7 +165,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                                         <td>
                                             <div class="action-group">
                                                 <?php if ((int)$user['id'] !== (int)$_SESSION['user_id']): ?>
-                                                    <a href="./delete.php?id=<?= (int)$user['id'] ?>" class="delete-btn" onclick="return confirm('Delete this user?');">Delete</a>
+                                                    <a href="./delete.php?id=<?= (int)$user['id'] ?>" class="delete-btn" data-confirm="Delete this user?">Delete</a>
                                                 <?php else: ?>
                                                     <span class="badge staff">You</span>
                                                 <?php endif; ?>

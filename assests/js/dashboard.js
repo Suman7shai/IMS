@@ -56,13 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updated: 'ims-last-updated'
     };
 
-    const demoProducts = [
-        { id: crypto.randomUUID(), name: 'Wireless Mouse', category: 'Accessories', price: 18.99, stock: 42 },
-        { id: crypto.randomUUID(), name: 'Office Keyboard', category: 'Accessories', price: 29.5, stock: 18 },
-        { id: crypto.randomUUID(), name: 'LED Monitor', category: 'Display', price: 159.99, stock: 9 },
-        { id: crypto.randomUUID(), name: 'USB Cable', category: 'Cables', price: 4.99, stock: 120 }
-    ];
-
     const els = {
         currentDate: document.getElementById('currentDate'),
         lastUpdated: document.getElementById('lastUpdated'),
@@ -92,24 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
         currency: 'NPR',
     });
 
-    let products = loadProducts();
-    let sales = loadSales();
-    
-
-    function loadProducts() {
-        const saved = localStorage.getItem(storageKeys.products);
-        if (!saved) {
-            localStorage.setItem(storageKeys.products, JSON.stringify(demoProducts));
-            return [...demoProducts];
-        }
-
-        try {
-            const parsed = JSON.parse(saved);
-            return Array.isArray(parsed) && parsed.length ? parsed : [...demoProducts];
-        } catch {
-            return [...demoProducts];
-        }
-    }
+    localStorage.removeItem(storageKeys.products);
+    localStorage.removeItem(storageKeys.sales);
+    let products = [];
+    let sales = [];
 
     function loadSales() {
         const saved = localStorage.getItem(storageKeys.sales);
@@ -142,18 +121,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateHeaderTime() {
         const now = new Date();
 
-        els.currentDate.textContent = new Intl.DateTimeFormat('en-NP', {
-            // weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: '2-digit',
-            // second: '2-digit'
-        }).format(now);
+        if (els.currentDate) {
+            els.currentDate.textContent = new Intl.DateTimeFormat('en-NP', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            }).format(now);
+        }
 
         const updated = localStorage.getItem(storageKeys.updated);
-        els.lastUpdated.textContent = updated ? formatDateTime(updated) : formatDateTime(now);
+        if (els.lastUpdated) {
+            els.lastUpdated.textContent = updated ? formatDateTime(updated) : formatDateTime(now);
+        }
     }
 
     function getFilteredProducts() {
@@ -183,6 +164,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderStats() {
+        if (!els.totalProducts || els.totalProducts.dataset.serverRendered === 'true') {
+            return;
+        }
+
         const totalProducts = products.length;
         const totalUnits = products.reduce((sum, product) => sum + Number(product.stock), 0);
         const lowStock = products.filter((product) => Number(product.stock) > 0 && Number(product.stock) <= 10).length;
@@ -195,6 +180,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderTable() {
+        if (!els.productTableBody) {
+            return;
+        }
+
         const visibleProducts = getFilteredProducts();
 
         if (!visibleProducts.length) {
@@ -247,6 +236,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderActivity() {
+        if (!els.activityList || els.activityList.dataset.serverRendered === 'true') {
+            return;
+        }
+
         if (!sales.length) {
             els.activityList.innerHTML = '<div class="empty-state">No sales recorded yet. Complete a sale to see activity here.</div>';
             return;
@@ -444,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            products = [...demoProducts];
+            products = [];
             sales = [];
             clearForm();
             refreshUI();
@@ -538,6 +531,88 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.key === 'Escape' && modalOverlay.classList.contains('show')) {
             hideLogoutModal();
         }
+    });
+
+    const formModalOverlay = document.createElement('div');
+    formModalOverlay.className = 'logout-modal-overlay';
+    formModalOverlay.innerHTML = `
+        <div class="logout-modal" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
+            <div class="logout-modal-icon">?</div>
+            <h3 id="formModalTitle">Confirm action</h3>
+            <p id="formModalMessage">Are you sure you want to continue?</p>
+            <div class="logout-modal-actions">
+                <button type="button" class="cancel-btn">Cancel</button>
+                <button type="button" class="confirm-btn">Confirm</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(formModalOverlay);
+
+    let pendingFormAction;
+    let pendingLinkAction;
+
+    const hideFormModal = () => {
+        formModalOverlay.classList.remove('show');
+        pendingFormAction = null;
+        pendingLinkAction = null;
+    };
+
+    const showFormModal = (message, action) => {
+        formModalOverlay.querySelector('#formModalMessage').textContent = message;
+        formModalOverlay.classList.add('show');
+        pendingFormAction = action;
+        formModalOverlay.querySelector('.cancel-btn').focus();
+    };
+
+    formModalOverlay.querySelector('.cancel-btn').addEventListener('click', hideFormModal);
+    formModalOverlay.querySelector('.confirm-btn').addEventListener('click', () => {
+        const action = pendingFormAction || pendingLinkAction;
+        hideFormModal();
+        if (action) {
+            action();
+        }
+    });
+
+    formModalOverlay.addEventListener('click', (event) => {
+        if (event.target === formModalOverlay) {
+            hideFormModal();
+        }
+    });
+
+    document.querySelectorAll('form[method="POST"]').forEach((form) => {
+        form.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && event.target.tagName !== 'TEXTAREA') {
+                event.preventDefault();
+            }
+        });
+
+        form.addEventListener('submit', (event) => {
+            if (form.dataset.confirmed === 'true') {
+                delete form.dataset.confirmed;
+                return;
+            }
+
+            event.preventDefault();
+            const submitter = event.submitter;
+            showFormModal('Are you sure you want to save these changes?', () => {
+                form.dataset.confirmed = 'true';
+                if (submitter) {
+                    form.requestSubmit(submitter);
+                } else {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+    document.querySelectorAll('a[data-confirm]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            pendingLinkAction = () => {
+                window.location.href = link.href;
+            };
+            showFormModal(link.dataset.confirm, pendingLinkAction);
+        });
     });
 });
 

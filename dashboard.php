@@ -18,13 +18,10 @@ $low_stock = $pdo->query("
     WHERE quantity <= low_stock_threshold AND quantity > 0
 ")->fetch()['total'];
 
-
-if ($_SESSION['role'] === 'admin') {
-    $units_sold = $pdo->query("
+$units_sold = $pdo->query("
     SELECT SUM(quantity) as total
     FROM txns WHERE type = 'out'
 ")->fetch()['total'] ?? 0;
-}
 
 
 $low_stock_products = $pdo->query("
@@ -165,68 +162,69 @@ $last_updated = $pdo->query("
         <section class="stats-grid" id="overview">
             <article class="stat-card">
                 <span>Total Products</span>
-                <strong id="totalProducts">0</strong>
+                <strong id="totalProducts" data-server-rendered="true"><?= (int) $total_products ?></strong>
             </article>
             <article class="stat-card">
                 <span>Total Units</span>
-                <strong id="totalUnits">0</strong>
+                <strong id="totalUnits" data-server-rendered="true"><?= (int) $total_units ?></strong>
             </article>
             <article class="stat-card">
                 <span>Low Stock</span>
-                <strong id="lowStock">0</strong>
+                <strong id="lowStock" data-server-rendered="true"><?= (int) $low_stock ?></strong>
             </article>
             <article class="stat-card">
                 <span>Units Sold</span>
-                <strong id="unitsSold">0</strong>
+                <strong id="unitsSold" data-server-rendered="true"><?= (int) $units_sold ?></strong>
             </article>
-        </section>
-
-        <section class="toolbar">
-            <label class="search-box">
-                <span>Search product</span>
-                <input type="search" id="searchInput" placeholder="Type product name or category...">
-            </label>
-            <div class="toolbar-actions">
-                <button type="button" id="resetDemo" class="secondary-btn">Search Products</button>
-            </div>
         </section>
 
         <section class="dashboard-grid">
-            <article class="panel panel-table" id="products">
+            <article class="panel activity-panel" id="activity">
                 <div class="panel-head">
                     <div>
-                        <p class="panel-tag">Products</p>
-                        <h2>Product List</h2>
+                        <p class="panel-tag">Activity</p>
+                        <h2>Recent Transactions</h2>
                     </div>
-                    <p class="panel-note">Edit, delete, or sell products from the table.</p>
                 </div>
-
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Stock</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productTableBody"></tbody>
-                    </table>
+                <div id="activityList" class="activity-list" data-server-rendered="true">
+                    <?php if (!$recent_txns): ?>
+                        <div class="empty-state">No transactions recorded yet.</div>
+                    <?php else: ?>
+                        <?php foreach ($recent_txns as $txn): ?>
+                            <div class="activity-item">
+                                <div>
+                                    <strong><?= htmlspecialchars($txn['product_name']) ?></strong>
+                                    <span><?= (int) $txn['quantity'] ?> unit(s) <?= $txn['type'] === 'in' ? 'bought' : 'sold' ?> by <?= htmlspecialchars($txn['full_name'] ?? 'Unknown user') ?> on <?= date('M d, Y h:i A', strtotime($txn['txn_date'])) ?></span>
+                                </div>
+                                <span class="badge <?= $txn['type'] === 'in' ? 'ok' : 'low' ?>"><?= $txn['type'] === 'in' ? 'Bought' : 'Sold' ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </article>
-        </section>
-
-        <section class="panel activity-panel" id="activity">
-            <div class="panel-head">
-                <div>
-                    <p class="panel-tag">Activity</p>
-                    <h2>Recent Sales</h2>
+            <aside class="panel low-stock-panel">
+                <div class="panel-head">
+                    <div>
+                        <p class="panel-tag">Inventory Alert</p>
+                        <h2>Low Stock Products</h2>
+                    </div>
                 </div>
-            </div>
-            <div id="activityList" class="activity-list"></div>
+                <div class="low-stock-list">
+                    <?php if (!$low_stock_products): ?>
+                        <div class="empty-state">All products have sufficient stock.</div>
+                    <?php else: ?>
+                        <?php foreach ($low_stock_products as $product): ?>
+                            <div class="low-stock-item">
+                                <div>
+                                    <strong><?= htmlspecialchars($product['name']) ?></strong>
+                                    <span>Alert at <?= (int) $product['low_stock_threshold'] ?> units</span>
+                                </div>
+                                <span class="stock-count"> <?= (int) $product['quantity'] ?> left</span>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </aside>
         </section>
         </div>
     </div>

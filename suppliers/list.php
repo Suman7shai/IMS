@@ -162,7 +162,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                                         <td>
                                             <div class="action-group">
                                                 <a href="./edit.php?id=<?= (int)$supplier['id'] ?>" class="action-btn edit-btn">Edit</a>
-                                                <a href="./delete.php?id=<?= (int)$supplier['id'] ?>" class="action-btn delete-btn" onclick="return confirm('Delete this supplier?');">Delete</a>
+                                                <a href="./delete.php?id=<?= (int)$supplier['id'] ?>" class="action-btn delete-btn" data-confirm="Delete this supplier?">Delete</a>
                                             </div>
                                         </td>
                                     </tr>
