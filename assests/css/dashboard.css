@@ -342,6 +342,7 @@ body.sidebar-open .sidebar-overlay {
     display: grid;
     grid-template-columns: minmax(0, 1.65fr) minmax(280px, 0.85fr);
     gap: 22px;
+    align-items: start;
 }
 
 .panel-table {
@@ -473,6 +474,8 @@ tbody tr:hover {
 .low-stock-list {
     display: grid;
     gap: 12px;
+    max-height: 280px;
+    overflow-y: auto;
 }
 
 .low-stock-item {
@@ -480,7 +483,7 @@ tbody tr:hover {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 14px 0;
+    padding: 10px 0;
     border-bottom: 1px solid var(--line);
 }
 

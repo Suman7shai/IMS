@@ -28,6 +28,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
+  if (mb_strlen($name) < 2 || mb_strlen($name) > 150 || !preg_match('/\S/u', $name)) {
+    $_SESSION['error'] = 'Supplier name must be 2-150 characters and cannot contain only spaces.';
+    header("Location: edit.php?id=" . $id);
+    exit;
+  }
+
+  if ($contact_person !== '' && !preg_match("/^[\p{L}][\p{L} '\-]*$/u", $contact_person)) {
+    $_SESSION['error'] = 'Contact person can contain letters, spaces, apostrophes, and hyphens only.';
+    header("Location: edit.php?id=" . $id);
+    exit;
+  }
+
   $stmt = $pdo->prepare("UPDATE suppliers SET name = ?, contact_person = ?, email = ?, phone = ?, address = ? WHERE id = ?");
   $stmt->execute([$name, $contact_person, $email, $phone, $address, $id]);
 
@@ -82,8 +94,8 @@ if(!$supplier) {
         <form method="POST" action="edit.php?id=<?= (int)$supplier['id'] ?>">
           <input type="hidden" name="id" value="<?= (int)$supplier['id'] ?>">
           <div class="form-grid">
-            <div class="form-group full"><label for="name">Supplier Name</label><input type="text" id="name" name="name" value="<?= htmlspecialchars($supplier['name']) ?>" required></div>
-            <div class="form-group"><label for="contact_person">Contact Person</label><input type="text" id="contact_person" name="contact_person" value="<?= htmlspecialchars($supplier['contact_person'] ?? '') ?>"></div>
+            <div class="form-group full"><label for="name">Supplier Name</label><input type="text" id="name" name="name" value="<?= htmlspecialchars($supplier['name']) ?>" pattern=".*\S.*" title="Supplier name cannot be blank or contain only spaces." minlength="2" maxlength="150" required></div>
+            <div class="form-group"><label for="contact_person">Contact Person</label><input type="text" id="contact_person" name="contact_person" value="<?= htmlspecialchars($supplier['contact_person'] ?? '') ?>" pattern="[\p{L}][\p{L} '\-]*" title="Use letters, spaces, apostrophes, and hyphens only." maxlength="100"></div>
             <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" value="<?= htmlspecialchars($supplier['email'] ?? '') ?>"></div>
             <div class="form-group"><label for="phone">Phone</label><input type="tel" id="phone" name="phone" value="<?= htmlspecialchars($supplier['phone'] ?? '') ?>"></div>
             <div class="form-group full"><label for="address">Address</label><textarea id="address" name="address"><?= htmlspecialchars($supplier['address'] ?? '') ?></textarea></div>

@@ -27,6 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
+  if (!preg_match("/^[\\p{L}][\\p{L} '\\-]*$/u", $name)) {
+    $_SESSION['error'] = "Category name can contain letters, spaces, apostrophes, and hyphens only.";
+    header("Location: edit.php?id=" . $id);
+    exit;
+  }
+
 
   $stmt = $pdo->prepare("UPDATE categories SET name = ?, description = ? where id = ?");
   $stmt->execute([$name, $description, $id]);
@@ -97,7 +103,7 @@ if (!$category) {
         <form method="POST" action="edit.php?id=<?= (int)$category['id'] ?>">
           <input type="hidden" name="id" value="<?= (int)$category['id'] ?>">
           <div class="form-grid">
-            <div class="form-group full"><label for="name">Category Name</label><input type="text" id="name" name="name" value="<?= htmlspecialchars($category['name']) ?>" required></div>
+            <div class="form-group full"><label for="name">Category Name</label><input type="text" id="name" name="name" value="<?= htmlspecialchars($category['name']) ?>" pattern="[\p{L}][\p{L} '\-]*" title="Use letters, spaces, apostrophes, and hyphens only." maxlength="100" required></div>
             <div class="form-group full"><label for="description">Description</label><textarea id="description" name="description"><?= htmlspecialchars($category['description'] ?? '') ?></textarea></div>
           </div>
           <div class="form-actions"><a href="./list.php" class="secondary-btn">Cancel</a><button type="submit" class="primary-btn">Update Category</button></div>

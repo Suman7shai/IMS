@@ -27,6 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
+    if (!preg_match("/^[\\p{L}][\\p{L} '\\-]*$/u", $full_name)) {
+        $_SESSION['error'] = 'Full name can contain letters, spaces, apostrophes, and hyphens only.';
+        header("Location: /Project_IMS/users/add.php");
+        exit;
+    }
+
   $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
   $stmt->execute([$username]);
   if ($stmt->fetch()) {
@@ -122,11 +128,11 @@ unset($_SESSION['success'], $_SESSION['error']);
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="full_name">Full Name</label>
-                            <input type="text" id="full_name" name="full_name" placeholder="Enter full name" required>
+                            <input type="text" id="full_name" name="full_name" placeholder="Enter full name" pattern="[\p{L}][\p{L} '\-]*" title="Use letters, spaces, apostrophes, and hyphens only." maxlength="100" required>
                         </div>
                         <div class="form-group">
                             <label for="username">Username</label>
-                            <input type="text" id="username" name="username" placeholder="Enter username" required>
+                            <input type="text" id="username" name="username" placeholder="Enter username" pattern="[A-Za-z0-9_]{3,30}" title="Username must be 3-30 characters using letters, numbers, or underscores." maxlength="30" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>

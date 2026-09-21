@@ -27,6 +27,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
+    if (mb_strlen($name) < 2 || mb_strlen($name) > 150 || !preg_match('/\S/u', $name)) {
+        $_SESSION['error'] = 'Supplier name must be 2-150 characters and cannot contain only spaces.';
+        header("Location: add.php");
+        exit;
+    }
+
+    if ($contact_person !== '' && !preg_match("/^[\p{L}][\p{L} '\-]*$/u", $contact_person)) {
+        $_SESSION['error'] = 'Contact person can contain letters, spaces, apostrophes, and hyphens only.';
+        header("Location: add.php");
+        exit;
+    }
+
   $stmt = $pdo->prepare("INSERT INTO suppliers (name, contact_person, email, phone, address) VALUES (?, ?, ?, ?, ?)");
   $stmt->execute([$name, $contact_person, $email, $phone, $address]);
 
@@ -110,11 +122,11 @@ unset($_SESSION['success'], $_SESSION['error']);
                     <div class="form-grid">
                         <div class="form-group full">
                             <label for="name">Supplier Name</label>
-                            <input type="text" id="name" name="name" placeholder="Enter supplier name" required>
+                            <input type="text" id="name" name="name" placeholder="Enter supplier name" pattern=".*\S.*" title="Supplier name cannot be blank or contain only spaces." minlength="2" maxlength="150" required>
                         </div>
                         <div class="form-group">
                             <label for="contact_person">Contact Person</label>
-                            <input type="text" id="contact_person" name="contact_person" placeholder="Contact person name">
+                            <input type="text" id="contact_person" name="contact_person" placeholder="Contact person name" pattern="[\p{L}][\p{L} '\-]*" title="Use letters, spaces, apostrophes, and hyphens only." maxlength="100">
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>

@@ -32,6 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
+    if (mb_strlen($name) < 2 || mb_strlen($name) > 150 || !preg_match('/\S/u', $name)) {
+        $_SESSION['error'] = 'Product name must be 2-150 characters and cannot contain only spaces.';
+        header("Location: add.php");
+        exit;
+    }
+
   $stmt = $pdo->prepare(
     "INSERT INTO products(name, description, category_id, price, buy_price, sale_price, quantity, low_stock_threshold, supplier_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
   );
@@ -162,7 +168,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                     <div class="form-grid">
                         <div class="form-group full">
                             <label for="name">Product Name</label>
-                            <input type="text" id="name" name="name" placeholder="Enter product name" required>
+                            <input type="text" id="name" name="name" placeholder="Enter product name" pattern=".*\S.*" title="Product name cannot be blank or contain only spaces." minlength="2" maxlength="150" required>
                         </div>
 
                         <div class="form-group full">

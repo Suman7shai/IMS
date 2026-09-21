@@ -24,6 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
+    if (!preg_match("/^[\\p{L}][\\p{L} '\\-]*$/u", $name)) {
+        $_SESSION['error'] = "Category name can contain letters, spaces, apostrophes, and hyphens only.";
+        header("Location: add.php");
+        exit;
+    }
+
   $stmt = $pdo->prepare("INSERT INTO categories (name, description) VALUES (?, ?)");
   $stmt->execute([$name, $description]);
 
@@ -107,7 +113,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                     <div class="form-grid">
                         <div class="form-group full">
                             <label for="name">Category Name</label>
-                            <input type="text" id="name" name="name" placeholder="Enter category name" required>
+                            <input type="text" id="name" name="name" placeholder="Enter category name" pattern="[\p{L}][\p{L} '\-]*" title="Use letters, spaces, apostrophes, and hyphens only." maxlength="100" required>
                         </div>
                         <div class="form-group full">
                             <label for="description">Description</label>

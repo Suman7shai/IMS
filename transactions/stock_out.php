@@ -15,6 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $customerName = trim((string)($_POST['customer_name'] ?? ''));
     $user_id = (int)$_SESSION['user_id'];
 
+    if ($customerName !== '' && !preg_match("/^[\p{L}][\p{L} '\-]*$/u", $customerName)) {
+        $_SESSION['error'] = 'Customer name can contain letters, spaces, apostrophes, and hyphens only.';
+        header('Location: /Project_IMS/transactions/stock_out.php');
+        exit;
+    }
+
     if (!is_array($productIds)) {
         $productIds = [$productIds];
         $quantities = [$quantities];
@@ -193,7 +199,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                 <form method="POST">
                     <div class="field customer-field">
                         <label for="customer_name">Customer Name (Optional)</label>
-                        <input type="text" id="customer_name" name="customer_name" placeholder="Enter customer name if available">
+                        <input type="text" id="customer_name" name="customer_name" placeholder="Enter customer name if available" pattern="[\p{L}][\p{L} '\-]*" title="Use letters, spaces, apostrophes, and hyphens only." maxlength="100">
                     </div>
                     
                     <div class="stock-out-items" id="stockOutItems">
