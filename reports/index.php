@@ -12,9 +12,10 @@ $type = $_GET['type'] ?? '';
 $date_from = $_GET['date_from'] ?? '';
 $date_to = $_GET['date_to'] ?? '';
 $product_id = $_GET['product_id'] ?? '';
+$supplier_id = $_GET['supplier_id'] ?? '';
 
 $query = "
-    SELECT t.*, p.name AS product_name, u.full_name
+    SELECT t.*, p.name AS product_name, p.buy_price, p.sale_price, u.full_name
     FROM txns t
     LEFT JOIN products p ON t.product_id = p.id
     LEFT JOIN users u ON t.user_id = u.id
@@ -42,6 +43,11 @@ if (!empty($product_id)) {
     $params[] = $product_id;
 }
 
+if (!empty($supplier_id)) {
+    $query .= " AND p.supplier_id = ?";
+    $params[] = $supplier_id;
+}
+
 $query .= " ORDER BY t.txn_date DESC";
 
 $stmt = $pdo->prepare($query);
@@ -54,6 +60,7 @@ $total_in_value = 0;
 $total_out_value = 0;
 $grand_total_quantity = 0;
 $grand_total_amount = 0;
+$profit_detail_rows = [];
 
 foreach ($transactions as $transaction) {
     $quantity = (int)($transaction['quantity'] ?? 0);
@@ -67,10 +74,30 @@ foreach ($transactions as $transaction) {
     } elseif (strtolower((string)($transaction['type'] ?? '')) === 'out') {
         $total_out += $quantity;
         $total_out_value += $value;
+        $buyPrice = (float)($transaction['buy_price'] ?? 0);
+        $profit_detail_rows[] = [
+            'date' => date('Y-m-d', strtotime($transaction['txn_date'])),
+            'product_name' => $transaction['product_name'] ?? 'Unknown Product',
+            'quantity' => $quantity,
+            'buy_price' => $buyPrice,
+            'sale_price' => (float)($transaction['unit_price'] ?? 0),
+            'cost' => $quantity * $buyPrice,
+            'revenue' => $value,
+            'profit' => $value - ($quantity * $buyPrice)
+        ];
     }
 }
 
+$profitDetailTotalCost = array_sum(array_column($profit_detail_rows, 'cost'));
+$profitDetailTotalRevenue = array_sum(array_column($profit_detail_rows, 'revenue'));
+$profitDetailTotal = array_sum(array_column($profit_detail_rows, 'profit'));
+
+$profitLoss = $total_out_value - $total_in_value;
+$profitLossLabel = $profitLoss > 0 ? 'Profit' : ($profitLoss < 0 ? 'Loss' : 'Break-even');
+$profitLossClass = $profitLoss > 0 ? 'profit' : ($profitLoss < 0 ? 'loss' : 'break-even');
+
 $products = $pdo->query("SELECT id, name FROM products ORDER BY name")->fetchAll();
+$suppliers = $pdo->query("SELECT id, name FROM suppliers ORDER BY name")->fetchAll();
 
 function formatCurrency($amount) {
     return 'NPR ' . number_format((float)$amount, 2);
@@ -111,6 +138,27 @@ function formatCurrency($amount) {
         .report-summary .stat-card {
             min-width: 0;
         }
+
+        .report-summary .profit-loss-card.profit strong { color: var(--success); }
+        .report-summary .profit-loss-card.loss strong { color: var(--danger); }
+        .report-summary .profit-loss-card.break-even strong { color: var(--muted); }
+
+        .profit-detail-btn { margin-bottom: 16px; }
+        .profit-details {
+            display: none;
+            background: rgba(255,255,255,0.92);
+            border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 24px;
+            padding: 22px;
+            box-shadow: var(--shadow);
+        }
+        .profit-details.show { display: block; }
+        .profit-details table { width: 100%; border-collapse: collapse; background: #fff; }
+        .profit-details th, .profit-details td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: left; }
+        .profit-details th { color: #fff; background: var(--primary); font-size: 0.78rem; text-transform: uppercase; }
+        .profit-details tfoot td { background: #ccfbf1; border-top: 2px solid var(--primary); font-weight: 800; }
+        .profit-positive { color: var(--success); font-weight: 800; }
+        .profit-negative { color: var(--danger); font-weight: 800; }
 
         .print-report-btn {
             border: none;
@@ -153,7 +201,7 @@ function formatCurrency($amount) {
 
         .filter-form {
             display: grid;
-            grid-template-columns: repeat(5, minmax(0, 1fr));
+            grid-template-columns: repeat(6, minmax(0, 1fr));
             gap: 14px;
             align-items: end;
         }
@@ -304,6 +352,8 @@ function formatCurrency($amount) {
             .sidebar-overlay,
             .filter-panel,
             .print-report-btn,
+            .profit-detail-btn,
+            .profit-details,
             .report-page-shell > .dashboard-header,
             .report-summary,
             .report-page-shell .panel-head {
@@ -560,6 +610,47 @@ function formatCurrency($amount) {
                 </article>
             </section>
 
+            <?php if ($_SESSION['role'] === 'admin'): ?>
+            <button type="button" class="primary-btn profit-detail-btn" id="profitDetailBtn">Check Profit / Loss</button>
+
+            <section class="profit-details" id="profitDetails">
+                <div class="panel-head">
+                    <div>
+                        <p class="panel-tag">Financial Details</p>
+                        <h2>Profit / Loss Breakdown</h2>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Date</th><th>Product</th><th>Qty</th><th>Buy Price</th><th>Sale Price</th><th>Cost</th><th>Revenue</th><th>Profit / Loss</th></tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!$profit_detail_rows): ?>
+                                <tr><td colspan="8">No Stock Out transactions available for profit/loss.</td></tr>
+                            <?php else: ?>
+                                <?php foreach ($profit_detail_rows as $profitRow): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($profitRow['date']) ?></td>
+                                        <td><?= htmlspecialchars($profitRow['product_name']) ?></td>
+                                        <td><?= $profitRow['quantity'] ?></td>
+                                        <td><?= formatCurrency($profitRow['buy_price']) ?></td>
+                                        <td><?= formatCurrency($profitRow['sale_price']) ?></td>
+                                        <td><?= formatCurrency($profitRow['cost']) ?></td>
+                                        <td><?= formatCurrency($profitRow['revenue']) ?></td>
+                                        <td class="<?= $profitRow['profit'] >= 0 ? 'profit-positive' : 'profit-negative' ?>"><?= formatCurrency($profitRow['profit']) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr><td colspan="5">Grand Total</td><td><?= formatCurrency($profitDetailTotalCost) ?></td><td><?= formatCurrency($profitDetailTotalRevenue) ?></td><td><?= formatCurrency($profitDetailTotal) ?></td></tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </section>
+            <?php endif; ?>
+
             <section class="filter-panel">
                 <form method="GET" class="filter-form">
                     <label>
@@ -578,6 +669,18 @@ function formatCurrency($amount) {
                             <?php foreach ($products as $product): ?>
                                 <option value="<?= (int)$product['id'] ?>" <?= $product_id == $product['id'] ? 'selected' : '' ?>>
                                     <?= htmlspecialchars($product['name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </label>
+
+                    <label>
+                        Supplier
+                        <select name="supplier_id">
+                            <option value="">All Suppliers</option>
+                            <?php foreach ($suppliers as $supplier): ?>
+                                <option value="<?= (int)$supplier['id'] ?>" <?= $supplier_id == $supplier['id'] ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($supplier['name']) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -676,6 +779,12 @@ function formatCurrency($amount) {
         document.getElementById('printReportBtn').addEventListener('click', () => {
             window.print();
         });
+        const profitDetailBtn = document.getElementById('profitDetailBtn');
+        if (profitDetailBtn) {
+            profitDetailBtn.addEventListener('click', () => {
+                document.getElementById('profitDetails').classList.toggle('show');
+            });
+        }
     </script>
 </body>
 </html>

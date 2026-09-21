@@ -13,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $description = trim($_POST['description']);
   $category_id = $_POST['category_id'] ?? null;
   $supplier_id = $_POST['supplier_id'] ?? null;
-  $price = $_POST['price'];
+    $buy_price = $_POST['buy_price'] ?? '';
+    $sale_price = $_POST['sale_price'] ?? '';
   $quantity = $_POST['quantity'] ?? 0;
   $low_stock_threshold = $_POST['low_stock_threshold'] ?? 10;
 
@@ -25,21 +26,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $supplier_id = null;
   }
 
-  if (empty($name) || $price === '' || $price === null) {
-    $_SESSION['error'] = "Product name and price must be filled properly!";
+    if (empty($name) || $buy_price === '' || $sale_price === '') {
+        $_SESSION['error'] = "Product name, buy price, and sale price must be filled properly!";
     header("Location: add.php");
     exit;
   }
 
   $stmt = $pdo->prepare(
-    "INSERT INTO products(name, description, category_id, price, quantity, low_stock_threshold, supplier_id) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    "INSERT INTO products(name, description, category_id, price, buy_price, sale_price, quantity, low_stock_threshold, supplier_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
   );
 
   $stmt->execute([
     $name,
     $description,
     $category_id,
-    $price,
+    $sale_price,
+    $buy_price,
+    $sale_price,
     $quantity,
     $low_stock_threshold,
     $supplier_id
@@ -188,8 +191,13 @@ unset($_SESSION['success'], $_SESSION['error']);
                         </div>
 
                         <div class="form-group">
-                            <label for="price">Price</label>
-                            <input type="number" id="price" name="price" min="0" step="0.01" placeholder="0.00" required>
+                            <label for="buy_price">Buy Unit Price</label>
+                            <input type="number" id="buy_price" name="buy_price" min="0" step="0.01" placeholder="0.00" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sale_price">Sale Unit Price</label>
+                            <input type="number" id="sale_price" name="sale_price" min="0" step="0.01" placeholder="0.00" required>
                         </div>
 
                         <div class="form-group">

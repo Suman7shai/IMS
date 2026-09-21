@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-$products = $pdo->query("SELECT id, name, quantity, price FROM products ORDER BY name")->fetchAll();
+$products = $pdo->query("SELECT id, name, quantity, price, sale_price FROM products ORDER BY name")->fetchAll();
 $stockOutTransactions = $pdo->query("SELECT t.*, p.name AS product_name, u.full_name FROM txns t LEFT JOIN products p ON t.product_id = p.id LEFT JOIN users u ON t.user_id = u.id WHERE t.type = 'out' ORDER BY t.txn_date DESC")->fetchAll();
 $totalStockOutQuantity = 0;
 $totalStockOutAmount = 0;
@@ -437,7 +437,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                                 <select name="product_id[]" required>
                                     <option value="">Select a product</option>
                                     <?php foreach ($products as $product): ?>
-                                        <option value="<?= (int)$product['id'] ?>" data-price="<?= htmlspecialchars($product['price']) ?>"><?= htmlspecialchars($product['name']) ?> (Available: <?= (int)$product['quantity'] ?>)</option>
+                                        <option value="<?= (int)$product['id'] ?>" data-price="<?= htmlspecialchars($product['sale_price']) ?>"><?= htmlspecialchars($product['name']) ?> (Available: <?= (int)$product['quantity'] ?>)</option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

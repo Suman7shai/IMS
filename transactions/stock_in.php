@@ -73,8 +73,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-$products = $pdo->query("SELECT id, name, quantity, price FROM products ORDER BY name")->fetchAll();
+$products = $pdo->query("SELECT id, name, quantity, price, buy_price FROM products ORDER BY name")->fetchAll();
 $suppliers = $pdo->query("SELECT name FROM suppliers ORDER BY name")->fetchAll();
+$stockInTransactions = $pdo->query("SELECT t.*, p.name AS product_name, u.full_name FROM txns t LEFT JOIN products p ON t.product_id = p.id LEFT JOIN users u ON t.user_id = u.id WHERE t.type = 'in' ORDER BY t.txn_date DESC")->fetchAll();
+$totalStockInQuantity = 0;
+$totalStockInAmount = 0;
+foreach ($stockInTransactions as $stockInTransaction) {
+    $totalStockInQuantity += (int)$stockInTransaction['quantity'];
+    $totalStockInAmount += (float)($stockInTransaction['total_price'] ?? 0);
+}
 $successMessage = $_SESSION['success'] ?? '';
 $errorMessage = $_SESSION['error'] ?? '';
 unset($_SESSION['success'], $_SESSION['error']);
@@ -170,7 +177,7 @@ unset($_SESSION['success'], $_SESSION['error']);
         }
         .alert.success {
             background: rgba(22,163,74,0.08);
-            color: var(--success);
+            color: #000;
             border-color: rgba(22,163,74,0.2);
         }
         .alert.error {
@@ -191,6 +198,37 @@ unset($_SESSION['success'], $_SESSION['error']);
             background: rgba(255,255,255,0.65);
         }
         .add-stock-in { margin-top: 14px; }
+        .stock-in-history {
+            background: rgba(255,255,255,0.92);
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,255,0.35);
+            box-shadow: 0 28px 70px rgba(15,23,42,0.22);
+            padding: 26px;
+        }
+        .stock-in-history table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+        .stock-in-history th,
+        .stock-in-history td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid rgba(15,23,42,0.08);
+        }
+        .stock-in-history th {
+            color: #fff;
+            background: var(--primary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .stock-in-history tfoot td {
+            background: rgba(20,184,166,0.12);
+            border-top: 2px solid var(--primary);
+            font-weight: 800;
+        }
+        .stock-in-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; }
         @media (max-width: 900px) {
             .form-grid { grid-template-columns: 1fr; }
         }
@@ -201,6 +239,7 @@ unset($_SESSION['success'], $_SESSION['error']);
             .submit-row { flex-direction: column; }
             .submit-row .primary-btn, .submit-row .secondary-btn { width: 100%; }
             .stock-in-item { grid-template-columns: 1fr; }
+            .stock-in-history { padding: 18px; }
         }
     </style>
 </head>
@@ -303,7 +342,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                             <select name="product_id[]" required>
                                 <option value="">Select a product</option>
                                 <?php foreach ($products as $product): ?>
-                                    <option value="<?= (int)$product['id'] ?>" data-price="<?= htmlspecialchars($product['price']) ?>"><?= htmlspecialchars($product['name']) ?> (Current: <?= (int)$product['quantity'] ?>)</option>
+                                    <option value="<?= (int)$product['id'] ?>" data-price="<?= htmlspecialchars($product['buy_price']) ?>"><?= htmlspecialchars($product['name']) ?> (Current: <?= (int)$product['quantity'] ?>)</option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -333,6 +372,55 @@ unset($_SESSION['success'], $_SESSION['error']);
                     </div>
                 </form>
             </section>
+
+            <section class="stock-in-history">
+                <div class="panel-head">
+                    <div>
+                        <p class="panel-tag">Stock In</p>
+                        <h2>History</h2>
+                    </div>
+                </div>
+
+                <div class="stock-in-table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!$stockInTransactions): ?>
+                                <tr><td colspan="6">No stock-in records found.</td></tr>
+                            <?php else: ?>
+                                <?php foreach ($stockInTransactions as $stockInTransaction): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars(date('Y-m-d', strtotime($stockInTransaction['txn_date']))) ?></td>
+                                        <td><?= htmlspecialchars($stockInTransaction['product_name'] ?? 'Unknown Product') ?></td>
+                                        <td><?= (int)$stockInTransaction['quantity'] ?></td>
+                                        <td>NPR <?= number_format((float)$stockInTransaction['unit_price'], 2) ?></td>
+                                        <td>NPR <?= number_format((float)$stockInTransaction['total_price'], 2) ?></td>
+                                        <td><?= htmlspecialchars($stockInTransaction['notes'] ?: '-') ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2">Grand Total</td>
+                                <td><?= $totalStockInQuantity ?></td>
+                                <td></td>
+                                <td>NPR <?= number_format($totalStockInAmount, 2) ?></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </section>
         </div>
     </div>
 
@@ -356,6 +444,15 @@ unset($_SESSION['success'], $_SESSION['error']);
                     event.target.closest('.stock-in-item').remove();
                 }
             }
+        });
+
+        stockInItems.addEventListener('change', (event) => {
+            if (event.target.tagName !== 'SELECT') {
+                return;
+            }
+            const selectedOption = event.target.options[event.target.selectedIndex];
+            const priceInput = event.target.closest('.stock-in-item').querySelector('input[name="unit_price[]"]');
+            priceInput.value = selectedOption.dataset.price || '';
         });
     </script>
 </body>

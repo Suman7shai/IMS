@@ -122,7 +122,7 @@ body {
 
 .alert.success {
     background: rgba(22, 163, 74, 0.08);
-    color: var(--success);
+    color: #000;
     border-color: rgba(22, 163, 74, 0.2);
 }
 

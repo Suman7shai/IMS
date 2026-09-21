@@ -181,13 +181,13 @@ tbody tr:hover {
 
 .alert.success {
     background: rgba(22, 163, 74, 0.08);
-    color: var(--success);
+    color: #000;
     border-color: rgba(22, 163, 74, 0.2);
 }
 
 .alert.error {
     background: rgba(239, 68, 68, 0.08);
-    color: var(--danger);
+    color: #ef0a0a;
     border-color: rgba(239, 68, 68, 0.2);
 }
 

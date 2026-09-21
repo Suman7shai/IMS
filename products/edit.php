@@ -13,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $name = trim($_POST['name']);
   $description = trim($_POST['description']);
   $category_id = $_POST['category_id'] ?? null;
-  $price = $_POST['price'];
+    $buy_price = $_POST['buy_price'] ?? '';
+    $sale_price = $_POST['sale_price'] ?? '';
   $quantity = $_POST['quantity'] ?? 0;
   $low_stock_threshold = $_POST['low_stock_threshold'] ?? 10;
   $supplier_id = $_POST['supplier_id'] ?? null;
@@ -26,17 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $supplier_id = null;
   }
 
-  if (empty($name) || $price === '' || $price === null) {
-    $_SESSION['error'] = "Product name and price must be filled properly!";
+    if (empty($name) || $buy_price === '' || $sale_price === '') {
+        $_SESSION['error'] = "Product name, buy price, and sale price must be filled properly!";
     header("Location: edit.php?id=" . $id);
     exit;
   }
 
   $stmt = $pdo->prepare(
-    "UPDATE products SET name = ?, description = ?, category_id = ?, price = ?, quantity = ?, low_stock_threshold = ?, supplier_id = ? WHERE id = ?"
+        "UPDATE products SET name = ?, description = ?, category_id = ?, price = ?, buy_price = ?, sale_price = ?, quantity = ?, low_stock_threshold = ?, supplier_id = ? WHERE id = ?"
   );
 
-  $stmt->execute([$name, $description, $category_id, $price, $quantity, $low_stock_threshold, $supplier_id, $id]);
+    $stmt->execute([$name, $description, $category_id, $sale_price, $buy_price, $sale_price, $quantity, $low_stock_threshold, $supplier_id, $id]);
 
   $_SESSION['success'] = "Product updated successfully!";
   header("Location: list.php");
@@ -74,7 +75,7 @@ unset($_SESSION['success'], $_SESSION['error']);
     <title>Edit Product | IMS</title>
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
-    <link rel="stylesheet" href="/Project_IMS/products/add.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/products_add.css">
 </head>
 <body>
     <div class="dashboard-layout">
@@ -204,8 +205,13 @@ unset($_SESSION['success'], $_SESSION['error']);
                         </div>
 
                         <div class="form-group">
-                            <label for="price">Price</label>
-                            <input type="number" id="price" name="price" min="0" step="0.01" value="<?= htmlspecialchars((string)$product['price']) ?>" required>
+                            <label for="buy_price">Buy Unit Price</label>
+                            <input type="number" id="buy_price" name="buy_price" min="0" step="0.01" value="<?= htmlspecialchars((string)$product['buy_price']) ?>" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sale_price">Sale Unit Price</label>
+                            <input type="number" id="sale_price" name="sale_price" min="0" step="0.01" value="<?= htmlspecialchars((string)$product['sale_price']) ?>" required>
                         </div>
 
                         <div class="form-group">

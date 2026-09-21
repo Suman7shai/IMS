@@ -42,6 +42,8 @@ CREATE TABLE products (
     description         TEXT,
     category_id         INT,                     
     price               DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    buy_price           DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    sale_price          DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     quantity            INT NOT NULL DEFAULT 0,
     low_stock_threshold INT NOT NULL DEFAULT 10,
     supplier_id         INT,

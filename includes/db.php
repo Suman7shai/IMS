@@ -15,6 +15,16 @@ try {
         ]
     );
 
+    $columns = $pdo->query("SHOW COLUMNS FROM products")->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('buy_price', $columns, true)) {
+        $pdo->exec("ALTER TABLE products ADD COLUMN buy_price DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER price");
+        $pdo->exec("UPDATE products SET buy_price = price WHERE buy_price = 0");
+    }
+    if (!in_array('sale_price', $columns, true)) {
+        $pdo->exec("ALTER TABLE products ADD COLUMN sale_price DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER buy_price");
+        $pdo->exec("UPDATE products SET sale_price = price WHERE sale_price = 0");
+    }
+
 } catch (PDOException $e) {
     die(json_encode([
         "success" => false,
