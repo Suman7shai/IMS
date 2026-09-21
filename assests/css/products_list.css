@@ -4,6 +4,16 @@
     gap: 22px;
 }
 
+.list-page-shell .header-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.list-page-shell .header-metrics .metric-card {
+    width: 100%;
+    min-width: 0;
+}
+
 .panel-table {
     width: 100%;
     background: rgba(255, 255, 255, 0.92);
@@ -279,6 +289,10 @@ tbody tr:hover {
     .header-metrics {
         width: 100%;
         grid-template-columns: 1fr 1fr;
+    }
+
+    .list-page-shell .header-metrics {
+        grid-template-columns: 1fr;
     }
 
     .toolbar-form {

@@ -56,7 +56,7 @@ unset($_SESSION['success'], $_SESSION['error']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product List | IMS</title>
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
-    <link rel="stylesheet" href="/Project_IMS/products/list.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/products_list.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
    
 </head>
@@ -80,8 +80,6 @@ unset($_SESSION['success'], $_SESSION['error']);
                     </button>
                     <ul class="submenu">
                         <li><a href="./add.php">Add Product</a></li>
-                        <li><a href="./edit.php">Edit Product</a></li>
-                        <li><a href="./delete.php">Delete Product</a></li>
                         <li><a href="./list.php">List Products</a></li>
                     </ul>
                 </div>
@@ -95,8 +93,6 @@ unset($_SESSION['success'], $_SESSION['error']);
                     </button>
                     <ul class="submenu">
                         <li><a href="/Project_IMS/categories/add.php">Add Categories</a></li>
-                        <li><a href="/Project_IMS/categories/edit.php">Edit Categories</a></li>
-                        <li><a href="/Project_IMS/categories/delete.php">Delete Categories</a></li>
                         <li><a href="/Project_IMS/categories/list.php">List Categories</a></li>
                     </ul>
                 </div>
@@ -109,8 +105,6 @@ unset($_SESSION['success'], $_SESSION['error']);
                     </button>
                     <ul class="submenu">
                         <li><a href="/Project_IMS/suppliers/add.php">Add Suppliers</a></li>
-                        <li><a href="/Project_IMS/suppliers/edit.php">Edit Suppliers</a></li>
-                        <li><a href="/Project_IMS/suppliers/delete.php">Delete Suppliers</a></li>
                         <li><a href="/Project_IMS/suppliers/list.php">List Suppliers</a></li>
                     </ul>
                 </div>

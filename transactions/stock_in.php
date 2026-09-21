@@ -8,36 +8,73 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $product_id = trim((string)($_POST['product_id'] ?? ''));
-    $quantity = (int)($_POST['quantity'] ?? 0);
-    $unit_price = (float)($_POST['unit_price'] ?? 0);
-    $notes = trim((string)($_POST['notes'] ?? ''));
+    $productIds = $_POST['product_id'] ?? [];
+    $quantities = $_POST['quantity'] ?? [];
+    $unitPrices = $_POST['unit_price'] ?? [];
+    $notesList = $_POST['notes'] ?? [];
+    $customerName = trim((string)($_POST['customer_name'] ?? ''));
+    $supplierName = trim((string)($_POST['supplier_name'] ?? ''));
     $user_id = (int)$_SESSION['user_id'];
 
-    if ($product_id === '' || $quantity <= 0) {
-        $_SESSION['error'] = 'Please select a product and enter a valid quantity.';
+    if (!is_array($productIds)) {
+        $productIds = [$productIds];
+        $quantities = [$quantities];
+        $unitPrices = [$unitPrices];
+        $notesList = [$notesList];
+    }
+
+    if (!$productIds) {
+        $_SESSION['error'] = 'Please add at least one stock-in item.';
         header('Location: /Project_IMS/transactions/stock_in.php');
         exit;
     }
 
-    $total_price = $quantity * $unit_price;
+    try {
+        $pdo->beginTransaction();
+        $insert = $pdo->prepare("INSERT INTO txns (product_id, type, quantity, unit_price, total_price, notes, user_id, txn_date) VALUES (?, 'in', ?, ?, ?, ?, ?, NOW())");
+        $update = $pdo->prepare("UPDATE products SET quantity = quantity + ? WHERE id = ?");
 
-    $stmt = $pdo->prepare("
-        INSERT INTO txns (product_id, type, quantity, unit_price, total_price, notes, user_id, txn_date)
-        VALUES (?, 'in', ?, ?, ?, ?, ?, NOW())
-    ");
+        foreach ($productIds as $index => $rawProductId) {
+            $productId = trim((string)$rawProductId);
+            $quantity = (int)($quantities[$index] ?? 0);
+            $unitPrice = (float)($unitPrices[$index] ?? 0);
+            $notes = trim((string)($notesList[$index] ?? ''));
 
-    $stmt->execute([$product_id, $quantity, $unit_price, $total_price, $notes, $user_id]);
+            $batchDetails = [];
+            if ($customerName !== '') {
+                $batchDetails[] = 'Customer: ' . $customerName;
+            }
+            if ($supplierName !== '') {
+                $batchDetails[] = 'Supplier: ' . $supplierName;
+            }
+            if ($batchDetails) {
+                $notes = trim($notes . ($notes !== '' ? ' | ' : '') . implode(' | ', $batchDetails));
+            }
 
-    $update = $pdo->prepare("UPDATE products SET quantity = quantity + ? WHERE id = ?");
-    $update->execute([$quantity, $product_id]);
+            if ($productId === '' || $quantity <= 0) {
+                throw new RuntimeException('Please complete every stock-in item with a product and valid quantity.');
+            }
 
-    $_SESSION['success'] = 'Stock in recorded successfully.';
+            $totalPrice = $quantity * $unitPrice;
+            $insert->execute([$productId, $quantity, $unitPrice, $totalPrice, $notes, $user_id]);
+            $update->execute([$quantity, $productId]);
+        }
+
+        $pdo->commit();
+        $_SESSION['success'] = 'Stock in recorded successfully.';
+    } catch (Throwable $exception) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        $_SESSION['error'] = $exception->getMessage();
+    }
+
     header('Location: /Project_IMS/transactions/stock_in.php');
     exit;
 }
 
 $products = $pdo->query("SELECT id, name, quantity, price FROM products ORDER BY name")->fetchAll();
+$suppliers = $pdo->query("SELECT name FROM suppliers ORDER BY name")->fetchAll();
 $successMessage = $_SESSION['success'] ?? '';
 $errorMessage = $_SESSION['error'] ?? '';
 unset($_SESSION['success'], $_SESSION['error']);
@@ -141,6 +178,19 @@ unset($_SESSION['success'], $_SESSION['error']);
             color: var(--danger);
             border-color: rgba(239,68,68,0.2);
         }
+        .stock-in-items { display: grid; gap: 14px; }
+        .stock-in-party-fields { margin-bottom: 18px; }
+        .stock-in-item {
+            display: grid;
+            grid-template-columns: 1.4fr 0.7fr 0.8fr 1.2fr auto;
+            gap: 14px;
+            align-items: end;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: rgba(255,255,255,0.65);
+        }
+        .add-stock-in { margin-top: 14px; }
         @media (max-width: 900px) {
             .form-grid { grid-template-columns: 1fr; }
         }
@@ -150,6 +200,7 @@ unset($_SESSION['success'], $_SESSION['error']);
             .form-card { padding: 18px; }
             .submit-row { flex-direction: column; }
             .submit-row .primary-btn, .submit-row .secondary-btn { width: 100%; }
+            .stock-in-item { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -198,7 +249,7 @@ unset($_SESSION['success'], $_SESSION['error']);
             <a class="logout-btn" id="logoutBtn" href="/Project_IMS/auth/logout.php">Logout</a>
         </aside>
 
-        <div class="dashboard-shell page-shell">
+        <div class="dashboard-shell page-shell transaction-page-shell">
             <header class="dashboard-header">
                 <div>
                     <p class="eyebrow">Inventory</p>
@@ -229,32 +280,52 @@ unset($_SESSION['success'], $_SESSION['error']);
                 </div>
 
                 <form method="POST">
-                    <div class="form-grid">
+                    <div class="form-grid stock-in-party-fields">
                         <div class="field">
-                            <label for="product_id">Product</label>
-                            <select id="product_id" name="product_id" required>
+                            <label for="customer_name">Customer Name (Optional)</label>
+                            <input type="text" id="customer_name" name="customer_name" placeholder="Enter customer name">
+                        </div>
+                        <div class="field">
+                            <label for="supplier_name">Supplier Name (Optional)</label>
+                            <select id="supplier_name" name="supplier_name">
+                                <option value="">Select supplier</option>
+                                <?php foreach ($suppliers as $supplier): ?>
+                                    <option value="<?= htmlspecialchars($supplier['name']) ?>"><?= htmlspecialchars($supplier['name']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="stock-in-items" id="stockInItems">
+                        <div class="stock-in-item">
+                        <div class="field">
+                            <label>Product</label>
+                            <select name="product_id[]" required>
                                 <option value="">Select a product</option>
                                 <?php foreach ($products as $product): ?>
-                                    <option value="<?= (int)$product['id'] ?>"><?= htmlspecialchars($product['name']) ?> (Current: <?= (int)$product['quantity'] ?>)</option>
+                                    <option value="<?= (int)$product['id'] ?>" data-price="<?= htmlspecialchars($product['price']) ?>"><?= htmlspecialchars($product['name']) ?> (Current: <?= (int)$product['quantity'] ?>)</option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
 
                         <div class="field">
-                            <label for="quantity">Quantity</label>
-                            <input type="number" id="quantity" name="quantity" min="1" step="1" placeholder="e.g. 25" required>
+                            <label>Quantity</label>
+                            <input type="number" name="quantity[]" min="1" step="1" placeholder="e.g. 25" required>
                         </div>
 
                         <div class="field">
-                            <label for="unit_price">Unit Price</label>
-                            <input type="number" id="unit_price" name="unit_price" min="0" step="0.01" placeholder="0.00" required>
+                            <label>Unit Price</label>
+                            <input type="number" name="unit_price[]" min="0" step="0.01" placeholder="0.00" required>
                         </div>
 
                         <div class="field">
-                            <label for="notes">Notes</label>
-                            <input type="text" id="notes" name="notes" placeholder="Optional remarks">
+                            <label>Notes</label>
+                            <input type="text" name="notes[]" placeholder="Optional remarks">
+                        </div>
+                        <button type="button" class="remove-stock-in secondary-btn">Remove</button>
                         </div>
                     </div>
+                    <button type="button" class="secondary-btn add-stock-in" id="addStockIn">+ Add Another Item</button>
 
                     <div class="submit-row">
                         <a href="/Project_IMS/dashboard.php" class="secondary-btn">Cancel</a>
@@ -266,5 +337,26 @@ unset($_SESSION['success'], $_SESSION['error']);
     </div>
 
     <script src="/Project_IMS/assests/js/dashboard.js"></script>
+    <script>
+        const stockInItems = document.getElementById('stockInItems');
+        const addStockIn = document.getElementById('addStockIn');
+        const firstStockInItem = stockInItems.querySelector('.stock-in-item');
+
+        addStockIn.addEventListener('click', () => {
+            const newItem = firstStockInItem.cloneNode(true);
+            newItem.querySelectorAll('input').forEach((input) => { input.value = ''; });
+            newItem.querySelector('select').selectedIndex = 0;
+            stockInItems.appendChild(newItem);
+        });
+
+        stockInItems.addEventListener('click', (event) => {
+            if (event.target.classList.contains('remove-stock-in')) {
+                const items = stockInItems.querySelectorAll('.stock-in-item');
+                if (items.length > 1) {
+                    event.target.closest('.stock-in-item').remove();
+                }
+            }
+        });
+    </script>
 </body>
 </html>

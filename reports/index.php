@@ -52,10 +52,14 @@ $total_in = 0;
 $total_out = 0;
 $total_in_value = 0;
 $total_out_value = 0;
+$grand_total_quantity = 0;
+$grand_total_amount = 0;
 
 foreach ($transactions as $transaction) {
     $quantity = (int)($transaction['quantity'] ?? 0);
     $value = (float)($transaction['total_price'] ?? 0);
+    $grand_total_quantity += $quantity;
+    $grand_total_amount += $value;
 
     if (strtolower((string)($transaction['type'] ?? '')) === 'in') {
         $total_in += $quantity;
@@ -88,6 +92,16 @@ function formatCurrency($amount) {
             gap: 22px;
         }
 
+        .report-page-shell .header-metrics {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .report-page-shell .header-metrics .metric-card {
+            width: 100%;
+            min-width: 0;
+        }
+
         .report-summary {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -96,6 +110,38 @@ function formatCurrency($amount) {
 
         .report-summary .stat-card {
             min-width: 0;
+        }
+
+        .print-report-btn {
+            border: none;
+            border-radius: 12px;
+            padding: 11px 16px;
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            box-shadow: 0 10px 20px rgba(15, 118, 110, 0.2);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .print-report-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 24px rgba(15, 118, 110, 0.25);
+        }
+
+        .print-report-header {
+            display: none;
+        }
+
+        .print-total-row {
+            display: none;
+        }
+
+        @media (max-width: 700px) {
+            .report-page-shell .header-metrics {
+                grid-template-columns: 1fr;
+            }
         }
 
         .filter-panel {
@@ -168,6 +214,13 @@ function formatCurrency($amount) {
         .report-table tbody tr:hover {
             background: rgba(20, 184, 166, 0.03);
         }
+        .report-table tfoot td {
+            padding: 14px 16px;
+            border-top: 2px solid var(--primary);
+            background: rgba(20, 184, 166, 0.1);
+            color: var(--ink);
+            font-weight: 800;
+        }
 
         .type-badge {
             display: inline-flex;
@@ -231,6 +284,177 @@ function formatCurrency($amount) {
             .panel {
                 border-radius: 20px;
                 padding: 18px;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 14mm;
+            }
+
+            body {
+                background: #fff;
+                padding: 0;
+                color: #0f172a;
+            }
+
+            .sidebar,
+            .mobile-sidebar-toggle,
+            .sidebar-overlay,
+            .filter-panel,
+            .print-report-btn,
+            .report-page-shell > .dashboard-header,
+            .report-summary,
+            .report-page-shell .panel-head {
+                display: none !important;
+            }
+
+            .dashboard-layout,
+            .report-page-shell {
+                display: block;
+                width: 100%;
+            }
+
+            .report-page-shell {
+                margin: 0;
+            }
+
+            .dashboard-header,
+            .stat-card,
+            .panel {
+                background: #fff;
+                border: 1px solid #d1d5db;
+                box-shadow: none;
+                break-inside: avoid;
+            }
+
+            .dashboard-header {
+                margin-bottom: 14px;
+            }
+
+            .report-summary {
+                margin-bottom: 14px;
+            }
+
+            .table-wrap {
+                overflow: visible;
+                border-color: #d1d5db;
+            }
+
+            .report-table {
+                width: 100%;
+                min-width: 0;
+                font-size: 10px;
+                table-layout: fixed;
+            }
+
+            .report-table thead th:nth-child(1),
+            .report-table tbody td:nth-child(1) { width: 18%; }
+            .report-table thead th:nth-child(2),
+            .report-table tbody td:nth-child(2) { width: 20%; }
+            .report-table thead th:nth-child(4),
+            .report-table tbody td:nth-child(4) { width: 12%; }
+            .report-table thead th:nth-child(5),
+            .report-table tbody td:nth-child(5) { width: 25%; }
+            .report-table thead th:nth-child(6),
+            .report-table tbody td:nth-child(6) { width: 25%; }
+
+            .report-table th,
+            .report-table td {
+                padding: 8px 9px;
+            }
+            .report-table tfoot td {
+                background: #ccfbf1 !important;
+                border-top: 2px solid #0f766e;
+                color: #0f172a;
+            }
+
+            .report-table .screen-total-row {
+                display: none;
+            }
+
+            .print-total-row {
+                display: grid;
+                grid-template-columns: 18% 20% 12% 25% 25%;
+                width: 100%;
+                border: 1px solid #b7e4dd;
+                border-top: 2px solid #0f766e;
+                background: #ccfbf1 !important;
+            }
+
+            .print-total-row span {
+                display: block;
+                padding: 12px 10px;
+                font-size: 12px;
+                font-weight: 800;
+                white-space: nowrap;
+                color: #0f172a;
+            }
+
+            .report-table thead th {
+                background: #0f766e !important;
+                color: #fff !important;
+            }
+
+            .report-table thead th:nth-child(3),
+            .report-table tbody td:nth-child(3),
+            .report-table thead th:nth-child(7),
+            .report-table tbody td:nth-child(7),
+            .report-table thead th:nth-child(8),
+            .report-table tbody td:nth-child(8) {
+                display: none;
+            }
+
+            .type-badge {
+                border: 1px solid #cbd5e1;
+                background: #fff !important;
+                color: #0f172a !important;
+            }
+
+            .panel {
+                border: 2px solid #0f766e;
+                border-radius: 18px;
+                padding: 20px;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .print-report-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px;
+                margin-bottom: 18px;
+                padding-bottom: 14px;
+                border-bottom: 2px solid #14b8a6;
+                color: #0f172a;
+            }
+
+            .print-report-brand {
+                display: grid;
+                gap: 3px;
+            }
+
+            .print-report-brand span {
+                color: #0f766e;
+                font-size: 11px;
+                font-weight: 800;
+                letter-spacing: 0.22em;
+                text-transform: uppercase;
+            }
+
+            .print-report-brand strong {
+                font-size: 23px;
+                letter-spacing: 0.02em;
+            }
+
+            .print-report-title {
+                color: #0f766e;
+                font-size: 18px;
+                font-weight: 800;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
             }
         }
     </style>
@@ -374,11 +598,19 @@ function formatCurrency($amount) {
             </section>
 
             <section class="panel">
+                <div class="print-report-header">
+                    <div class="print-report-brand">
+                        <span>IMS</span>
+                        <strong>StockSync</strong>
+                    </div>
+                    <span class="print-report-title">Report</span>
+                </div>
                 <div class="panel-head">
                     <div>
-                        <p class="panel-tag">Transactions</p>
-                        <h2>Report Log</h2>
+                        <p class="panel-tag">Report</p>
+                        <h2>Report</h2>
                     </div>
+                    <button type="button" class="print-report-btn" id="printReportBtn">Print / Save PDF</button>
                 </div>
 
                 <div class="table-wrap">
@@ -415,12 +647,35 @@ function formatCurrency($amount) {
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </tbody>
+                        <tfoot class="screen-total-row">
+                            <tr>
+                                <td colspan="2">Grand Total</td>
+                                <td></td>
+                                <td class="grand-total-quantity"><?= $grand_total_quantity ?></td>
+                                <td></td>
+                                <td><?= formatCurrency($grand_total_amount) ?></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
                     </table>
+                    <div class="print-total-row">
+                        <span>Grand Total</span>
+                        <span></span>
+                        <span><?= $grand_total_quantity ?></span>
+                        <span></span>
+                        <span><?= formatCurrency($grand_total_amount) ?></span>
+                    </div>
                 </div>
             </section>
         </div>
     </div>
 
     <script src="/Project_IMS/assests/js/dashboard.js"></script>
+    <script>
+        document.getElementById('printReportBtn').addEventListener('click', () => {
+            window.print();
+        });
+    </script>
 </body>
 </html>
