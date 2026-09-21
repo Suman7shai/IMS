@@ -329,7 +329,7 @@ body.sidebar-open .sidebar-overlay {
 
 .dashboard-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.65fr) minmax(280px, 0.85fr);
     gap: 22px;
 }
 
@@ -455,6 +455,44 @@ tbody tr:hover {
     gap: 12px;
 }
 
+.low-stock-panel {
+    min-width: 0;
+}
+
+.low-stock-list {
+    display: grid;
+    gap: 12px;
+}
+
+.low-stock-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.low-stock-item:last-child {
+    border-bottom: none;
+}
+
+.low-stock-item strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.low-stock-item span {
+    color: var(--muted);
+    font-size: 0.86rem;
+}
+
+.low-stock-item .stock-count {
+    flex-shrink: 0;
+    color: #b45309;
+    font-weight: 700;
+}
+
 .activity-item {
     border: 1px solid var(--line);
     background: rgba(255, 255, 255, 0.9);
@@ -564,6 +602,11 @@ tbody tr:hover {
     background: rgba(239, 68, 68, 0.12);
     color: #dc2626;
     margin: 0 auto 16px;
+}
+
+.logout-modal-icon.warning {
+    background: rgba(245, 158, 11, 0.14);
+    color: #b45309;
 }
 
 .logout-modal h3 {

@@ -85,6 +85,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                         <li><a href="./list.php">List Products</a></li>
                     </ul>
                 </div>
+                <?php if ($_SESSION['role'] === 'admin'): ?>
                 <div class="nav-item has-submenu">
                     <button type="button" class="nav-parent" aria-expanded="false">
                         <span>Categories</span>
@@ -113,10 +114,11 @@ unset($_SESSION['success'], $_SESSION['error']);
                         <li><a href="/Project_IMS/suppliers/list.php">List Suppliers</a></li>
                     </ul>
                 </div>
+                <?php endif; ?>
                 <a href="/Project_IMS/transactions/stock_in.php">Stock In</a>
                 <a href="/Project_IMS/transactions/stock_out.php">Stock Out</a>
                 <a href="/Project_IMS/reports/index.php">Reports</a>
-                <a href="/Project_IMS/users/list.php">Users</a>
+                <?php if ($_SESSION['role'] === 'admin'): ?><a href="/Project_IMS/users/list.php">Users</a><?php endif; ?>
             </nav>
 
             <div class="sidebar-footer">
@@ -250,7 +252,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                                         <td>
                                             <div class="action-group">
                                                 <a href="./edit.php?id=<?= (int)$product['id'] ?>" class="action-btn edit-btn">Edit</a>
-                                                <a href="./delete.php?id=<?= (int)$product['id'] ?>" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                                                <a href="./delete.php?id=<?= (int)$product['id'] ?>" class="action-btn delete-btn" data-confirm="Are you sure you want to delete this product?">Delete</a>
                                             </div>
                                         </td>
                                     </tr>

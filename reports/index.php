@@ -258,6 +258,7 @@ function formatCurrency($amount) {
                         <li><a href="/Project_IMS/products/list.php">List Products</a></li>
                     </ul>
                 </div>
+                <?php if ($_SESSION['role'] === 'admin'): ?>
                 <div class="nav-item has-submenu">
                     <button type="button" class="nav-parent" aria-expanded="false">
                         <span>Categories</span>
@@ -282,10 +283,11 @@ function formatCurrency($amount) {
                         <li><a href="/Project_IMS/suppliers/list.php">List Suppliers</a></li>
                     </ul>
                 </div>
+                <?php endif; ?>
                 <a href="/Project_IMS/transactions/stock_in.php">Stock In</a>
                 <a href="/Project_IMS/transactions/stock_out.php">Stock Out</a>
                 <a href="/Project_IMS/reports/index.php">Reports</a>
-                <a href="/Project_IMS/users/list.php">Users</a>
+                <?php if ($_SESSION['role'] === 'admin'): ?><a href="/Project_IMS/users/list.php">Users</a><?php endif; ?>
             </nav>
 
             <div class="sidebar-footer">
