@@ -537,7 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formModalOverlay.className = 'logout-modal-overlay';
     formModalOverlay.innerHTML = `
         <div class="logout-modal" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
-            <div class="logout-modal-icon">?</div>
+            <div class="logout-modal-icon" id="formModalIcon">?</div>
             <h3 id="formModalTitle">Confirm action</h3>
             <p id="formModalMessage">Are you sure you want to continue?</p>
             <div class="logout-modal-actions">
@@ -557,8 +557,13 @@ document.addEventListener('DOMContentLoaded', () => {
         pendingLinkAction = null;
     };
 
-    const showFormModal = (message, action) => {
+    const showFormModal = (message, action, isDelete = false) => {
         formModalOverlay.querySelector('#formModalMessage').textContent = message;
+        formModalOverlay.querySelector('#formModalIcon').innerHTML = isDelete
+            ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" /></svg>'
+            : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v5h5M9 13h6M9 17h6" /></svg>';
+        formModalOverlay.querySelector('#formModalIcon').classList.toggle('delete-icon', isDelete);
+        formModalOverlay.querySelector('#formModalIcon').classList.toggle('file-icon', !isDelete);
         formModalOverlay.classList.add('show');
         pendingFormAction = action;
         formModalOverlay.querySelector('.cancel-btn').focus();
@@ -611,7 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pendingLinkAction = () => {
                 window.location.href = link.href;
             };
-            showFormModal(link.dataset.confirm, pendingLinkAction);
+            showFormModal(link.dataset.confirm, pendingLinkAction, link.classList.contains('delete-btn'));
         });
     });
 });

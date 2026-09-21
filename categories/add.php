@@ -2,6 +2,7 @@
 
 session_start();
 require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/validation.php';
 
 if (!isset($_SESSION['user_id'])) {
   header("Location: /Project_IMS/index.php");
@@ -24,8 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
-    if (!preg_match("/^[\\p{L}][\\p{L} '\\-]*$/u", $name)) {
-        $_SESSION['error'] = "Category name can contain letters, spaces, apostrophes, and hyphens only.";
+    if (!is_valid_category_name($name) || !is_valid_free_text($description, 1000)) {
+        $_SESSION['error'] = "Category name must contain letters and spaces only.";
         header("Location: add.php");
         exit;
     }
@@ -50,7 +51,7 @@ unset($_SESSION['success'], $_SESSION['error']);
     <title>Add Category | IMS</title>
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
-    <link rel="stylesheet" href="/Project_IMS/products/add.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/products_add.css">
 </head>
 <body>
     <div class="dashboard-layout">
@@ -113,11 +114,11 @@ unset($_SESSION['success'], $_SESSION['error']);
                     <div class="form-grid">
                         <div class="form-group full">
                             <label for="name">Category Name</label>
-                            <input type="text" id="name" name="name" placeholder="Enter category name" pattern="[\p{L}][\p{L} '\-]*" title="Use letters, spaces, apostrophes, and hyphens only." maxlength="100" required>
+                            <input type="text" id="name" name="name" placeholder="Enter category name" pattern="[\p{L}]+( [\p{L}]+)*" title="Category name must contain letters and spaces only." minlength="2" maxlength="100" required>
                         </div>
                         <div class="form-group full">
                             <label for="description">Description</label>
-                            <textarea id="description" name="description" placeholder="Short description for this category"></textarea>
+                            <textarea id="description" name="description" placeholder="Short description for this category" maxlength="1000" pattern="[\p{L}\p{N}\s.,'&quot;!?()\/&amp;@:#%+\-_]*"></textarea>
                         </div>
                     </div>
                     <div class="form-actions">

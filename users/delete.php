@@ -3,6 +3,7 @@
 session_start();
 
 require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/validation.php';
 
 if (!isset($_SESSION['user_id'])) {
   header('Location: /Project_IMS/index.php');
@@ -22,9 +23,14 @@ if (!isset($_GET['id'])) {
 }
 
 $id = $_GET['id'];
+if (!is_valid_integer((string)$id)) {
+  header('Location: list.php');
+  exit;
+}
+$id = (int)$id;
 
 
-if ($id === $_SESSION['user_id']) {
+if ($id === (int)$_SESSION['user_id']) {
   $_SESSION['error'] = "You cannot delete your own account.";
   header('Location: list.php');
   exit;

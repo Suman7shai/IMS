@@ -2,6 +2,7 @@
 
 session_start();
 require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/validation.php';
 
 if (!isset($_SESSION['user_id'])) {
   header('Location: /Project_IMS/index.php');
@@ -27,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
-    if (!preg_match("/^[\\p{L}][\\p{L} '\\-]*$/u", $full_name)) {
+    if (!is_valid_person_name($full_name) || !is_valid_username($username) || !is_valid_email($email) || !is_valid_password($password) || !preg_match('/^(admin|staff)$/', $role)) {
         $_SESSION['error'] = 'Full name can contain letters, spaces, apostrophes, and hyphens only.';
         header("Location: /Project_IMS/users/add.php");
         exit;
@@ -63,7 +64,7 @@ unset($_SESSION['success'], $_SESSION['error']);
     <title>Add User | IMS</title>
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
-    <link rel="stylesheet" href="/Project_IMS/products/add.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/products_add.css">
 </head>
 <body>
     <div class="dashboard-layout">
@@ -136,7 +137,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" name="email" placeholder="user@example.com" required>
+                            <input type="email" id="email" name="email" placeholder="user@example.com" maxlength="254" required>
                         </div>
                         <div class="form-group">
                             <label for="role">Role</label>
@@ -148,7 +149,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                         </div>
                         <div class="form-group full">
                             <label for="password">Password</label>
-                            <input type="password" id="password" name="password" placeholder="Enter password" required>
+                            <input type="password" id="password" name="password" placeholder="Enter password" pattern="(?=.*[A-Za-z])(?=.*[0-9])[^\r\n]{8,72}" title="Password must be 8-72 characters and include a letter and a number." maxlength="72" required>
                         </div>
                     </div>
                     <div class="form-actions">

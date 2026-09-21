@@ -2,6 +2,7 @@
 
 session_start();
 require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/validation.php';
 
 if (!isset($_SESSION['user_id'])) {
   header("Location: /Project_IMS/index.php");
@@ -27,14 +28,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
-    if (mb_strlen($name) < 2 || mb_strlen($name) > 150 || !preg_match('/\S/u', $name)) {
-        $_SESSION['error'] = 'Supplier name must be 2-150 characters and cannot contain only spaces.';
+    if (!is_valid_supplier_name($name)) {
+        $_SESSION['error'] = 'Supplier name must be 2-150 characters and contain letters, spaces, and common punctuation only.';
         header("Location: add.php");
         exit;
     }
 
-    if ($contact_person !== '' && !preg_match("/^[\p{L}][\p{L} '\-]*$/u", $contact_person)) {
+    if ($contact_person !== '' && !is_valid_person_name($contact_person)) {
         $_SESSION['error'] = 'Contact person can contain letters, spaces, apostrophes, and hyphens only.';
+        header("Location: add.php");
+        exit;
+    }
+
+    if (($email !== '' && !is_valid_email($email)) || ($phone !== '' && !is_valid_phone($phone)) || !is_valid_free_text($address, 255)) {
+        $_SESSION['error'] = 'Please enter a valid email, phone number, and address.';
         header("Location: add.php");
         exit;
     }
@@ -59,7 +66,7 @@ unset($_SESSION['success'], $_SESSION['error']);
     <title>Add Supplier | IMS</title>
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
-    <link rel="stylesheet" href="/Project_IMS/products/add.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/products_add.css">
 </head>
 <body>
     <div class="dashboard-layout">
@@ -122,7 +129,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                     <div class="form-grid">
                         <div class="form-group full">
                             <label for="name">Supplier Name</label>
-                            <input type="text" id="name" name="name" placeholder="Enter supplier name" pattern=".*\S.*" title="Supplier name cannot be blank or contain only spaces." minlength="2" maxlength="150" required>
+                            <input type="text" id="name" name="name" placeholder="Enter supplier name" pattern="[\p{L}][\p{L} .,'&amp;()\/+#\-]*" title="Supplier name must contain letters, spaces, and common punctuation only." minlength="2" maxlength="150" required>
                         </div>
                         <div class="form-group">
                             <label for="contact_person">Contact Person</label>
@@ -130,15 +137,15 @@ unset($_SESSION['success'], $_SESSION['error']);
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" name="email" placeholder="supplier@example.com">
+                            <input type="email" id="email" name="email" placeholder="supplier@example.com" maxlength="254">
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone</label>
-                            <input type="tel" id="phone" name="phone" placeholder="Phone number">
+                            <input type="tel" id="phone" name="phone" placeholder="Phone number" pattern="[0-9+() .\-]{7,20}" title="Use 7-20 digits and phone symbols only." maxlength="20">
                         </div>
                         <div class="form-group full">
                             <label for="address">Address</label>
-                            <textarea id="address" name="address" placeholder="Supplier address"></textarea>
+                            <textarea id="address" name="address" placeholder="Supplier address" maxlength="255"></textarea>
                         </div>
                     </div>
                     <div class="form-actions">

@@ -85,7 +85,7 @@
         }
         .alert.error {
             background: rgba(239,68,68,0.08);
-            color: var(--danger);
+            color: #ff0000;
             border-color: rgba(239,68,68,0.2);
         }
         .stock-out-history {

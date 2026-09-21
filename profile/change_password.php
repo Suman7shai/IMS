@@ -2,6 +2,7 @@
 session_start();
 
 require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/validation.php';
 
 if (!isset($_SESSION['user_id'])) {
   header("Location: http://localhost:8080/Project_IMS/index.php");
@@ -25,8 +26,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
-  if (strlen($new_password) < 8) {
-    $_SESSION['error'] = "Password must be at least 8 characters long.";
+  if (!is_valid_password($new_password)) {
+    $_SESSION['error'] = "Password must be 8-72 characters and include at least one letter and one number.";
     header("Location: change_password.php");
     exit;
   }

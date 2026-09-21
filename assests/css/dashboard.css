@@ -618,6 +618,26 @@ tbody tr:hover {
     margin: 0 auto 16px;
 }
 
+.logout-modal-icon svg {
+    width: 34px;
+    height: 34px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.logout-modal-icon.delete-icon {
+    background: rgba(239, 68, 68, 0.14);
+    color: #dc2626;
+}
+
+.logout-modal-icon.file-icon {
+    background: rgba(15, 118, 110, 0.12);
+    color: var(--primary);
+}
+
 .logout-modal-icon.warning {
     background: rgba(245, 158, 11, 0.14);
     color: #b45309;

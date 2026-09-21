@@ -1,6 +1,7 @@
 <?php
 session_start();
 require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/validation.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: /Project_IMS/index.php');
@@ -16,13 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $supplierName = trim((string)($_POST['supplier_name'] ?? ''));
     $user_id = (int)$_SESSION['user_id'];
 
-    if ($customerName !== '' && !preg_match("/^[\p{L}][\p{L} '\-]*$/u", $customerName)) {
+    if ($customerName !== '' && !is_valid_person_name($customerName)) {
         $_SESSION['error'] = 'Customer name can contain letters, spaces, apostrophes, and hyphens only.';
         header('Location: /Project_IMS/transactions/stock_in.php');
         exit;
     }
 
-    if ($supplierName !== '' && !preg_match("/^[\p{L}][\p{L} '\-]*$/u", $supplierName)) {
+    if ($supplierName !== '' && !is_valid_entity_name($supplierName)) {
         $_SESSION['error'] = 'Supplier name can contain letters, spaces, apostrophes, and hyphens only.';
         header('Location: /Project_IMS/transactions/stock_in.php');
         exit;
@@ -48,8 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         foreach ($productIds as $index => $rawProductId) {
             $productId = trim((string)$rawProductId);
-            $quantity = (int)($quantities[$index] ?? 0);
-            $unitPrice = (float)($unitPrices[$index] ?? 0);
+            $rawQuantity = (string)($quantities[$index] ?? '');
+            $rawUnitPrice = (string)($unitPrices[$index] ?? '');
+            $quantity = (int)$rawQuantity;
+            $unitPrice = (float)$rawUnitPrice;
             $notes = trim((string)($notesList[$index] ?? ''));
 
             $batchDetails = [];
@@ -63,7 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $notes = trim($notes . ($notes !== '' ? ' | ' : '') . implode(' | ', $batchDetails));
             }
 
-            if ($productId === '' || $quantity <= 0) {
+            if (!is_valid_integer($productId) || !is_valid_integer($rawQuantity) || !is_valid_decimal($rawUnitPrice)
+                || $quantity <= 0 || !is_valid_free_text($notes, 1000)) {
                 throw new RuntimeException('Please complete every stock-in item with a product and valid quantity.');
             }
 
@@ -215,17 +219,17 @@ unset($_SESSION['success'], $_SESSION['error']);
 
                         <div class="field">
                             <label>Quantity</label>
-                            <input type="number" name="quantity[]" min="1" step="1" placeholder="e.g. 25" required>
+                            <input type="number" name="quantity[]" min="1" step="1" pattern="\d+" placeholder="e.g. 25" required>
                         </div>
 
                         <div class="field">
                             <label>Unit Price</label>
-                            <input type="number" name="unit_price[]" min="0" step="0.01" placeholder="0.00" required>
+                            <input type="number" name="unit_price[]" min="0" step="0.01" pattern="\d+(\.\d{1,2})?" placeholder="0.00" required>
                         </div>
 
                         <div class="field">
                             <label>Notes</label>
-                            <input type="text" name="notes[]" placeholder="Optional remarks">
+                            <input type="text" name="notes[]" placeholder="Optional remarks" maxlength="1000" pattern="[\p{L}\p{N}\s.,'&quot;!?()\/&amp;@:#%+\-_]*">
                         </div>
                         <button type="button" class="remove-stock-in secondary-btn">Remove</button>
                         </div>

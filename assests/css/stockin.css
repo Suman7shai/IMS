@@ -85,7 +85,7 @@
         }
         .alert.error {
             background: rgba(239,68,68,0.08);
-            color: var(--danger);
+            color:#f90303;
             border-color: rgba(239,68,68,0.2);
         }
         .stock-in-items { display: grid; gap: 14px; }

@@ -34,7 +34,7 @@ if (isset($_SESSION['user_id'])) {
                     <?php unset($_SESSION['error']); ?>
                 <?php endif; ?>
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" required autocomplete="off">
+                <input type="text" id="username" name="username" pattern="[A-Za-z0-9_]{3,30}" title="Username must be 3-30 characters using letters, numbers, or underscores." maxlength="30" required autocomplete="off">
                 <label for="password">Password</label>  
                 <div class="password-field">
                     <input type="password" id="password" name="password" required autocomplete="off">

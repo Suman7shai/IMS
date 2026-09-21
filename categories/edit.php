@@ -3,6 +3,7 @@
 session_start();
 
 require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/validation.php';
 
 if (!isset($_SESSION['user_id'])) {
   header("Location: http://Project_IMS:8080/index.php");
@@ -18,6 +19,10 @@ if ($_SESSION['role'] !== 'admin') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $id = $_POST['id'];
+  if (!is_valid_integer((string)$id)) {
+    header("Location: list.php");
+    exit;
+  }
   $name = trim($_POST['name']);
   $description = trim($_POST['description']);
 
@@ -27,8 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
-  if (!preg_match("/^[\\p{L}][\\p{L} '\\-]*$/u", $name)) {
-    $_SESSION['error'] = "Category name can contain letters, spaces, apostrophes, and hyphens only.";
+  if (!is_valid_category_name($name) || !is_valid_free_text($description, 1000)) {
+    $_SESSION['error'] = "Category name must contain letters and spaces only.";
     header("Location: edit.php?id=" . $id);
     exit;
   }
@@ -51,6 +56,10 @@ if (!isset($_GET['id'])) {
 
 
 $id = $_GET['id'];
+if (!is_valid_integer((string)$id)) {
+  header("Location: list.php");
+  exit;
+}
 $stmt = $pdo->prepare("SELECT * FROM categories WHERE id = ?");
 $stmt->execute([$id]);
 $category = $stmt->fetch();
@@ -71,7 +80,7 @@ if (!$category) {
   <title>Edit Category | IMS</title>
   <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
   <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
-  <link rel="stylesheet" href="/Project_IMS/products/add.css">
+  <link rel="stylesheet" href="/Project_IMS/assests/css/products_add.css">
 </head>
 <body>
   <div class="dashboard-layout">
@@ -103,8 +112,8 @@ if (!$category) {
         <form method="POST" action="edit.php?id=<?= (int)$category['id'] ?>">
           <input type="hidden" name="id" value="<?= (int)$category['id'] ?>">
           <div class="form-grid">
-            <div class="form-group full"><label for="name">Category Name</label><input type="text" id="name" name="name" value="<?= htmlspecialchars($category['name']) ?>" pattern="[\p{L}][\p{L} '\-]*" title="Use letters, spaces, apostrophes, and hyphens only." maxlength="100" required></div>
-            <div class="form-group full"><label for="description">Description</label><textarea id="description" name="description"><?= htmlspecialchars($category['description'] ?? '') ?></textarea></div>
+            <div class="form-group full"><label for="name">Category Name</label><input type="text" id="name" name="name" value="<?= htmlspecialchars($category['name']) ?>" pattern="[\p{L}]+( [\p{L}]+)*" title="Category name must contain letters and spaces only." minlength="2" maxlength="100" required></div>
+            <div class="form-group full"><label for="description">Description</label><textarea id="description" name="description" maxlength="1000" pattern="[\p{L}\p{N}\s.,'&quot;!?()\/&amp;@:#%+\-_]*"><?= htmlspecialchars($category['description'] ?? '') ?></textarea></div>
           </div>
           <div class="form-actions"><a href="./list.php" class="secondary-btn">Cancel</a><button type="submit" class="primary-btn">Update Category</button></div>
         </form>

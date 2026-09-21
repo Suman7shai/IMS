@@ -2,6 +2,7 @@
 
 session_start();
 require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/validation.php';
 
 if (!isset($_SESSION['user_id'])) {
   header("Location: /Project_IMS/index.php");
@@ -20,6 +21,10 @@ if (!isset($_GET['id'])) {
 }
 
 $id = $_GET['id'];
+if (!is_valid_integer((string)$id)) {
+  header("Location: list.php");
+  exit;
+}
 
 $stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM products WHERE category_id = ?");
 $stmt->execute([$id]);

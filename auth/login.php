@@ -3,12 +3,13 @@
 session_start();
 
 require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';  
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/validation.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $username = trim($_POST['username']);
   $password = $_POST['password'];
 
-  if (empty($username) || empty($password)){
+  if (!is_valid_username($username) || $password === '' || preg_match('/[\r\n]/', $password)){
     $_SESSION['error'] = 'All fields are required.';
     header("Location: /Project_IMS/index.php");
     exit;

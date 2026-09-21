@@ -2,6 +2,7 @@
 
 session_start();
 require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/db.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/validation.php';
 
 if (!isset($_SESSION['user_id'])) {
   header("Location: /Project_IMS/index.php");
@@ -10,12 +11,16 @@ if (!isset($_SESSION['user_id'])) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $id = $_POST['id'];
-  $name = trim($_POST['name']);
-  $description = trim($_POST['description']);
+    if (!is_valid_integer((string)$id)) {
+        header("Location: list.php");
+        exit;
+    }
+    $name = trim((string)($_POST['name'] ?? ''));
+    $description = trim((string)($_POST['description'] ?? ''));
   $category_id = $_POST['category_id'] ?? null;
     $buy_price = $_POST['buy_price'] ?? '';
     $sale_price = $_POST['sale_price'] ?? '';
-  $quantity = $_POST['quantity'] ?? 0;
+    $quantity = $_POST['quantity'] ?? '';
   $low_stock_threshold = $_POST['low_stock_threshold'] ?? 10;
   $supplier_id = $_POST['supplier_id'] ?? null;
 
@@ -27,14 +32,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $supplier_id = null;
   }
 
-    if (empty($name) || $buy_price === '' || $sale_price === '') {
-        $_SESSION['error'] = "Product name, buy price, and sale price must be filled properly!";
+    if ($name === '' || $buy_price === '' || $sale_price === '' || $quantity === '') {
+        $_SESSION['error'] = "Product name, buy price, sale price, and quantity are required!";
     header("Location: edit.php?id=" . $id);
     exit;
   }
 
-    if (mb_strlen($name) < 2 || mb_strlen($name) > 150 || !preg_match('/\S/u', $name)) {
-        $_SESSION['error'] = 'Product name must be 2-150 characters and cannot contain only spaces.';
+    if (!is_valid_product_name($name) || !is_valid_free_text($description, 1000)) {
+        $_SESSION['error'] = 'Product name must contain only letters, numbers, and spaces.';
+        header("Location: edit.php?id=" . $id);
+        exit;
+    }
+
+    if (!is_valid_decimal((string)$buy_price) || !is_valid_decimal((string)$sale_price)
+        || !is_valid_integer((string)$quantity) || !is_valid_integer((string)$low_stock_threshold)) {
+        $_SESSION['error'] = 'Prices and stock values must be valid non-negative numbers.';
         header("Location: edit.php?id=" . $id);
         exit;
     }
@@ -56,6 +68,10 @@ if (!isset($_GET['id'])) {
 }
 
 $id = $_GET['id'];
+if (!is_valid_integer((string)$id)) {
+    header("Location: list.php");
+    exit;
+}
 
 $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
 $stmt->execute([$id]);
@@ -178,12 +194,12 @@ unset($_SESSION['success'], $_SESSION['error']);
                     <div class="form-grid">
                         <div class="form-group full">
                             <label for="name">Product Name</label>
-                            <input type="text" id="name" name="name" value="<?= htmlspecialchars($product['name']) ?>" pattern=".*\S.*" title="Product name cannot be blank or contain only spaces." minlength="2" maxlength="150" required>
+                            <input type="text" id="name" name="name" value="<?= htmlspecialchars($product['name']) ?>" pattern="[\p{L}\p{N}]+( [\p{L}\p{N}]+)*" title="Product name must contain only letters, numbers, and spaces." minlength="2" maxlength="150" required>
                         </div>
 
                         <div class="form-group full">
                             <label for="description">Description</label>
-                            <textarea id="description" name="description" placeholder="Short product description"><?= htmlspecialchars($product['description'] ?? '') ?></textarea>
+                            <textarea id="description" name="description" placeholder="Short product description" maxlength="1000" pattern="[\p{L}\p{N}\s.,'&quot;!?()\/&amp;@:#%+\-_]*"><?= htmlspecialchars($product['description'] ?? '') ?></textarea>
                         </div>
 
                         <div class="form-group">
@@ -212,22 +228,22 @@ unset($_SESSION['success'], $_SESSION['error']);
 
                         <div class="form-group">
                             <label for="buy_price">Buy Unit Price</label>
-                            <input type="number" id="buy_price" name="buy_price" min="0" step="0.01" value="<?= htmlspecialchars((string)$product['buy_price']) ?>" required>
+                            <input type="number" id="buy_price" name="buy_price" min="0" step="0.01" pattern="\d+(\.\d{1,2})?" value="<?= htmlspecialchars((string)$product['buy_price']) ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label for="sale_price">Sale Unit Price</label>
-                            <input type="number" id="sale_price" name="sale_price" min="0" step="0.01" value="<?= htmlspecialchars((string)$product['sale_price']) ?>" required>
+                            <input type="number" id="sale_price" name="sale_price" min="0" step="0.01" pattern="\d+(\.\d{1,2})?" value="<?= htmlspecialchars((string)$product['sale_price']) ?>" required>
                         </div>
 
                         <div class="form-group">
                             <label for="quantity">Quantity</label>
-                            <input type="number" id="quantity" name="quantity" min="0" step="1" value="<?= (int)$product['quantity'] ?>">
+                            <input type="number" id="quantity" name="quantity" min="0" step="1" pattern="\d+" value="<?= (int)$product['quantity'] ?>" required>
                         </div>
 
                         <div class="form-group full">
                             <label for="low_stock_threshold">Low Stock Threshold</label>
-                            <input type="number" id="low_stock_threshold" name="low_stock_threshold" min="0" step="1" value="<?= (int)$product['low_stock_threshold'] ?>">
+                            <input type="number" id="low_stock_threshold" name="low_stock_threshold" min="0" step="1" pattern="\d+" value="<?= (int)$product['low_stock_threshold'] ?>">
                         </div>
                     </div>
 
