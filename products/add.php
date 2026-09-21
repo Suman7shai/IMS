@@ -62,8 +62,8 @@ unset($_SESSION['success'], $_SESSION['error']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product | IMS</title>
-    <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
-    <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
+    <link rel="stylesheet" href="/Project_IMS/assets/css/dashboard.css">
+    <link rel="stylesheet" href="/Project_IMS/assets/css/sidebar-submenu.css">
     <link rel="stylesheet" href="/Project_IMS/products/add.css">
 </head>
 <body>
@@ -124,7 +124,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                 <strong>Stock updates instantly after sales.</strong>
             </div>
 
-            <a class="logout-btn" id="logoutBtn" href="/Project_IMS/auth/logout.php">Logout</a>
+            <button type="button" class="logout-btn" id="logoutBtn">Logout</button>
         </aside>
 
         <div class="dashboard-shell page-shell">
@@ -210,6 +210,6 @@ unset($_SESSION['success'], $_SESSION['error']);
         </div>
     </div>
 
-    <script src="/Project_IMS/assests/js/dashboard.js"></script>
+    <script src="/Project_IMS/assets/js/dashboard.js"></script>
 </body>
 </html>
