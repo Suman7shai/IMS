@@ -1,0 +1,234 @@
+
+        body { margin: 0; }
+        .page-shell { width: 100%; display: grid; gap: 22px; }
+        .form-card {
+            background: rgba(255,255,255,0.92);
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,255,0.35);
+            box-shadow: 0 28px 70px rgba(15,23,42,0.22);
+            padding: 26px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+        .field {
+            display: grid;
+            gap: 8px;
+        }
+        .field label {
+            font-weight: 700;
+            color: var(--ink);
+            font-size: 0.9rem;
+        }
+        .field input,
+        .field select,
+        .field textarea {
+            width: 100%;
+            border: 1px solid rgba(15,23,42,0.12);
+            border-radius: 12px;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.96);
+            color: var(--ink);
+            font: inherit;
+        }
+        .field textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            outline: none;
+            border-color: rgba(15,118,110,0.45);
+            box-shadow: 0 0 0 4px rgba(20,184,166,0.12);
+        }
+        .submit-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .primary-btn, .secondary-btn {
+            border: none;
+            border-radius: 12px;
+            padding: 12px 18px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .primary-btn {
+            color: #fff;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 12px 24px rgba(239,68,68,0.2);
+        }
+        .secondary-btn {
+            color: var(--ink);
+            background: rgba(15,23,42,0.06);
+        }
+        .alert {
+            padding: 14px 16px;
+            border-radius: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            border: 1px solid transparent;
+        }
+        .alert.success {
+            background: rgba(22,163,74,0.08);
+            color: #000;
+            border-color: rgba(22,163,74,0.2);
+        }
+        .alert.error {
+            background: rgba(239,68,68,0.08);
+            color: var(--danger);
+            border-color: rgba(239,68,68,0.2);
+        }
+        .stock-out-history {
+            background: rgba(255,255,255,0.92);
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,255,0.35);
+            box-shadow: 0 28px 70px rgba(15,23,42,0.22);
+            padding: 26px;
+        }
+        .stock-out-history .panel-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+        .stock-out-history table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+        .stock-out-history th,
+        .stock-out-history td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid rgba(15,23,42,0.08);
+        }
+        .stock-out-history th {
+            color: #fff;
+            background: var(--primary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .stock-out-history tfoot td {
+            background: rgba(20,184,166,0.12);
+            border-top: 2px solid var(--primary);
+            font-weight: 800;
+        }
+        .stock-out-items {
+            display: grid;
+            gap: 14px;
+        }
+        .stock-out-item {
+            display: grid;
+            grid-template-columns: 1.4fr 0.7fr 0.8fr 1.2fr auto;
+            gap: 14px;
+            align-items: end;
+            padding: 16px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: rgba(255,255,255,0.65);
+        }
+        .add-stock-out { margin-top: 14px; }
+        .remove-stock-out { color: var(--danger); white-space: nowrap; }
+        .customer-field { margin-bottom: 18px; }
+        .stock-out-invoice {
+            background: #fff;
+            border: 2px solid var(--primary);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+        .stock-out-invoice-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 2px solid var(--primary-2);
+            padding-bottom: 14px;
+            margin-bottom: 16px;
+        }
+        .invoice-customer {
+            margin-left: auto;
+            color: var(--ink);
+            font-size: 0.95rem;
+        }
+        .stock-out-invoice table { width: 100%; border-collapse: collapse; }
+        .stock-out-invoice th,
+        .stock-out-invoice td { padding: 10px; text-align: left; border-bottom: 1px solid var(--line); }
+        .stock-out-invoice th { color: #fff; background: var(--primary); text-transform: uppercase; font-size: 0.78rem; }
+        .stock-out-invoice tfoot td { background: #ccfbf1; border-top: 2px solid var(--primary); font-weight: 800; }
+        .stock-out-table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+        }
+        @media (max-width: 900px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+            body { padding: 16px; }
+            .dashboard-header { padding: 22px 18px; flex-direction: column; align-items: flex-start; }
+            .form-card { padding: 18px; }
+            .submit-row { flex-direction: column; }
+            .submit-row .primary-btn, .submit-row .secondary-btn { width: 100%; }
+            .stock-out-history { padding: 18px; }
+            .stock-out-history .panel-head { align-items: flex-start; flex-direction: column; }
+            .stock-out-item { grid-template-columns: 1fr; }
+        }
+
+        @media print {
+            @page { size: A4 landscape; margin: 14mm; }
+            body { background: #fff; padding: 0; color: #0f172a; }
+            .sidebar,
+            .mobile-sidebar-toggle,
+            .sidebar-overlay,
+            .dashboard-header,
+            .alert,
+            .form-card,
+            .stock-out-history,
+            .print-stock-out-btn { display: none !important; }
+            .dashboard-layout,
+            .dashboard-shell { display: block; width: 100%; }
+            .stock-out-history {
+                display: block;
+                margin: 0;
+                padding: 18px;
+                border: 2px solid #0f766e;
+                border-radius: 18px;
+                box-shadow: none;
+                background: #fff;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .stock-out-history .panel-head { margin-bottom: 14px; }
+            .stock-out-history .panel-tag { color: #0f766e; }
+            .stock-out-history h2::before { content: 'StockSync - '; }
+            .stock-out-table-wrap { overflow: visible; border-color: #b7e4dd; }
+            .stock-out-history table { font-size: 11px; }
+            .stock-out-history th { background: #0f766e !important; }
+            .stock-out-history th,
+            .stock-out-history td { padding: 9px 10px; }
+            .stock-out-history tfoot td { background: #ccfbf1 !important; }
+            .stock-out-invoice {
+                display: block;
+                border: 2px solid #0f766e;
+                border-radius: 18px;
+                box-shadow: none;
+                padding: 18px;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .stock-out-invoice th { background: #0f766e !important; }
+            .stock-out-invoice tfoot td { background: #ccfbf1 !important; }
+        }
