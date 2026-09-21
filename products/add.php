@@ -64,7 +64,7 @@ unset($_SESSION['success'], $_SESSION['error']);
     <title>Add Product | IMS</title>
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
-    <link rel="stylesheet" href="/Project_IMS/assests/css/add.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/products_add.css">
 </head>
 <body>
     <div class="dashboard-layout">
@@ -212,6 +212,6 @@ unset($_SESSION['success'], $_SESSION['error']);
         </div>
     </div>
 
-    <script src="/Project_IMS/assets/js/dashboard.js"></script>
+    <script src="/Project_IMS/assests/js/dashboard.js"></script>
 </body>
 </html>
