@@ -62,9 +62,9 @@ unset($_SESSION['success'], $_SESSION['error']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product | IMS</title>
-    <link rel="stylesheet" href="/Project_IMS/assets/css/dashboard.css">
-    <link rel="stylesheet" href="/Project_IMS/assets/css/sidebar-submenu.css">
-    <link rel="stylesheet" href="/Project_IMS/products/add.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
+    <link rel="stylesheet" href="/Project_IMS/assests/css/add.css">
 </head>
 <body>
     <div class="dashboard-layout">
