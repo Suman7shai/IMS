@@ -156,6 +156,65 @@ body.sidebar-open .sidebar-overlay {
     outline: none;
 }
 
+.sidebar-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    color: #f8fafc;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.08);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar-profile:hover,
+.sidebar-profile:focus-visible {
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.sidebar-profile-avatar {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border: 2px solid #5eead4;
+    border-radius: 50%;
+    color: #0f766e;
+    background: #ccfbf1;
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.sidebar-profile-info {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+}
+
+.sidebar-profile-info strong,
+.sidebar-profile-info span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidebar-profile-info strong {
+    font-size: 0.9rem;
+}
+
+.sidebar-profile-info span {
+    color: #5eead4;
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
 .sidebar-footer {
     margin-top: auto;
     padding: 16px;
@@ -469,6 +528,166 @@ tbody tr:hover {
 
 .low-stock-panel {
     min-width: 0;
+}
+
+.low-stock-bell {
+    display: inline-flex;
+    margin-left: 6px;
+    color: #dc2626;
+    vertical-align: -2px;
+}
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.7fr) minmax(0, 1.3fr);
+    gap: 22px;
+}
+
+.profile-hero-card {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 10px;
+    min-height: 360px;
+    padding: 28px;
+    text-align: center;
+}
+
+.profile-large-avatar {
+    width: 104px;
+    height: 104px;
+    display: grid;
+    place-items: center;
+    border: 4px solid #5eead4;
+    border-radius: 50%;
+    color: #0f766e;
+    background: #ccfbf1;
+    font-size: 2.8rem;
+    font-weight: 800;
+}
+
+.profile-hero-card h2 {
+    margin-top: 6px;
+    font-size: 1.5rem;
+}
+
+.profile-hero-card p {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.profile-role-badge {
+    padding: 6px 12px;
+    border-radius: 999px;
+    color: #0f766e;
+    background: rgba(20, 184, 166, 0.14);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.profile-details-card {
+    padding: 26px;
+}
+
+.profile-details-list {
+    display: grid;
+    gap: 0;
+    margin-top: 6px;
+}
+
+.profile-details-list div {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.profile-details-list dt {
+    color: var(--muted);
+    font-size: 0.88rem;
+}
+
+.profile-details-list dd {
+    color: var(--ink);
+    font-weight: 700;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.profile-password-btn {
+    display: inline-flex;
+    margin-top: 22px;
+    text-decoration: none;
+}
+
+.password-panel {
+    width: min(680px, 100%);
+    padding: 26px;
+}
+
+.password-form {
+    display: grid;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.password-form label {
+    display: grid;
+    gap: 8px;
+    color: var(--ink);
+    font-weight: 700;
+}
+
+.password-form input {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.96);
+    font: inherit;
+    outline: none;
+}
+
+.password-form input:focus {
+    border-color: rgba(15, 118, 110, 0.45);
+    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.15);
+}
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.form-actions .secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.alert {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.alert.success {
+    color: #166534;
+    background: rgba(22, 163, 74, 0.1);
+    border-color: rgba(22, 163, 74, 0.22);
+}
+
+.alert.error {
+    color: #b91c1c;
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.22);
 }
 
 .low-stock-list {
@@ -818,7 +1037,8 @@ tbody tr:hover {
 
     .header-metrics,
     .stats-grid,
-    .form-row {
+    .form-row,
+    .profile-layout {
         grid-template-columns: 1fr;
     }
 

@@ -26,51 +26,7 @@ unset($_SESSION['success'], $_SESSION['error']);
     <title>Categories | IMS</title>
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
-    <style>
-        body { margin: 0; }
-        .page-shell { width: 100%; display: grid; gap: 22px; }
-        .panel-table {
-            background: rgba(255,255,255,0.92);
-            border-radius: 28px;
-            border: 1px solid rgba(255,255,255,0.35);
-            box-shadow: 0 28px 70px rgba(15,23,42,0.22);
-            padding: 24px;
-        }
-        .panel-head {
-            display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap;
-        }
-        .panel-head h2 { margin-top: 8px; font-size: clamp(1.5rem, 2vw, 2.2rem); }
-        .table-wrap { overflow-x: auto; border-radius: 18px; border: 1px solid rgba(15,23,42,0.08); }
-        table { width: 100%; border-collapse: collapse; min-width: 720px; background: #fff; }
-        th, td { padding: 16px 18px; text-align: left; border-bottom: 1px solid rgba(15,23,42,0.08); }
-        thead th {
-            background: rgba(15,118,110,0.08);
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            font-size: 0.8rem;
-        }
-        tbody tr:hover { background: rgba(20,184,166,0.04); }
-        .empty-state { text-align: center; color: var(--muted); font-weight: 600; padding: 28px 20px; }
-        .action-group { display: flex; gap: 8px; flex-wrap: wrap; }
-        .action-btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            padding: 10px 14px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.88rem; transition: transform 0.2s ease;
-        }
-        .action-btn:hover { transform: translateY(-1px); }
-        .edit-btn { color: #fff; background: linear-gradient(135deg, var(--primary), var(--primary-2)); }
-        .delete-btn { color: #fff; background: linear-gradient(135deg, #ef4444, #dc2626); }
-        .primary-btn, .secondary-btn {
-            border: none; border-radius: 12px; padding: 12px 18px; font-weight: 700; cursor: pointer; text-decoration: none; transition: transform 0.2s ease;
-        }
-        .primary-btn { color: #fff; background: linear-gradient(135deg, var(--primary), var(--primary-2)); }
-        .secondary-btn { color: var(--ink); background: rgba(15,23,42,0.06); }
-        .primary-btn:hover, .secondary-btn:hover { transform: translateY(-1px); }
-        .alert { padding: 14px 16px; border-radius: 14px; font-weight: 600; margin-bottom: 16px; border: 1px solid transparent; }
-        .alert.success { background: rgba(22,163,74,0.08); color: var(--success); border-color: rgba(22,163,74,0.2); }
-        .alert.error { background: rgba(239,68,68,0.08); color: var(--danger); border-color: rgba(239,68,68,0.2); }
-        @media (max-width: 640px) { body { padding: 16px; } .dashboard-header { padding: 22px 18px; flex-direction: column; align-items: flex-start; } .panel-table { padding: 16px; } }
-    </style>
+    <link rel="stylesheet" href="/Project_IMS/assests/css/categories.css">
 </head>
 <body>
     <div class="dashboard-layout">

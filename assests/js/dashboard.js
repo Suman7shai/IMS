@@ -471,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     const ensureLogoutButton = () => {
-        let logoutBtn = document.getElementById('logoutBtn');
+        let logoutBtn = document.getElementById('logoutBtn') || document.querySelector('.sidebar .logout-btn');
 
         if (!logoutBtn) {
             logoutBtn = document.createElement('button');

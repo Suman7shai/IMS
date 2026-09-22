@@ -71,6 +71,14 @@ $last_updated = $pdo->query("
                 <p>Navigate the dashboard sections faster.</p>
             </div>
 
+            <a class="sidebar-profile" href="/Project_IMS/profile/index.php">
+                <span class="sidebar-profile-avatar"><?= strtoupper(substr($_SESSION['full_name'] ?? $_SESSION['username'], 0, 1)) ?></span>
+                <span class="sidebar-profile-info">
+                    <strong><?= htmlspecialchars($_SESSION['full_name'] ?? $_SESSION['username']) ?></strong>
+                    <span><?= htmlspecialchars(ucfirst($_SESSION['role'] ?? 'staff')) ?></span>
+                </span>
+            </a>
+
             <nav class="sidebar-nav" aria-label="Dashboard menu">
             <a href="#overview">Dashboard</a>
             <div class="nav-item has-submenu">
@@ -206,7 +214,11 @@ $last_updated = $pdo->query("
                 <div class="panel-head">
                     <div>
                         <p class="panel-tag">Inventory Alert</p>
-                        <h2>Low Stock Products</h2>
+                        <h2>Low Stock Products <span class="low-stock-bell" role="img" aria-label="Low stock alert" title="Low stock alert">
+                            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span></h2>
                     </div>
                 </div>
                 <div class="low-stock-list">
