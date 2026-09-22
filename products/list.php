@@ -246,7 +246,9 @@ unset($_SESSION['success'], $_SESSION['error']);
                                         <td>
                                             <div class="action-group">
                                                 <a href="./edit.php?id=<?= (int)$product['id'] ?>" class="action-btn edit-btn">Edit</a>
+                                                <?php if ($_SESSION['role'] === 'admin'): ?>
                                                 <a href="./delete.php?id=<?= (int)$product['id'] ?>" class="action-btn delete-btn" data-confirm="Are you sure you want to delete this product?">Delete</a>
+                                                <?php endif; ?>
                                             </div>
                                         </td>
                                     </tr>

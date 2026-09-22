@@ -483,27 +483,34 @@ tbody tr:hover {
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--line);
+    padding: 12px 14px;
+    border: 1px solid rgba(239, 68, 68, 0.55);
+    border-radius: 12px;
+    background: rgba(254, 226, 226, 0.5);
 }
 
 .low-stock-item:last-child {
-    border-bottom: none;
+    border-bottom: 1px solid rgba(239, 68, 68, 0.55);
 }
 
 .low-stock-item strong {
     display: block;
     margin-bottom: 4px;
+    color: #b91c1c;
 }
 
 .low-stock-item span {
-    color: var(--muted);
+    color: #dc2626;
     font-size: 0.86rem;
 }
 
 .low-stock-item .stock-count {
     flex-shrink: 0;
-    color: #b45309;
+    color: #fff;
+    background: #dc2626;
+    border: 1px solid #b91c1c;
+    border-radius: 8px;
+    padding: 6px 10px;
     font-weight: 700;
 }
 
@@ -516,6 +523,14 @@ tbody tr:hover {
     align-items: center;
     justify-content: space-between;
     gap: 14px;
+}
+
+.activity-item.transaction-stockin {
+    border-color: rgba(22, 163, 74, 0.55);
+}
+
+.activity-item.transaction-stockout {
+    border-color: rgba(239, 68, 68, 0.55);
 }
 
 .activity-item strong {

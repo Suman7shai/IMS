@@ -191,12 +191,12 @@ $last_updated = $pdo->query("
                         <div class="empty-state">No transactions recorded yet.</div>
                     <?php else: ?>
                         <?php foreach ($recent_txns as $txn): ?>
-                            <div class="activity-item">
+                            <div class="activity-item <?= $txn['type'] === 'in' ? 'transaction-stockin' : 'transaction-stockout' ?>">
                                 <div>
                                     <strong><?= htmlspecialchars($txn['product_name']) ?></strong>
-                                    <span><?= (int) $txn['quantity'] ?> unit(s) <?= $txn['type'] === 'in' ? 'bought' : 'sold' ?> by <?= htmlspecialchars($txn['full_name'] ?? 'Unknown user') ?> on <?= date('M d, Y h:i A', strtotime($txn['txn_date'])) ?></span>
+                                    <span><?= (int) $txn['quantity'] ?> unit(s) <?= $txn['type'] === 'in' ? 'stockin' : 'stockout' ?> by <?= htmlspecialchars($txn['full_name'] ?? 'Unknown user') ?> on <?= date('M d, Y h:i A', strtotime($txn['txn_date'])) ?></span>
                                 </div>
-                                <span class="badge <?= $txn['type'] === 'in' ? 'ok' : 'low' ?>"><?= $txn['type'] === 'in' ? 'Bought' : 'Sold' ?></span>
+                                <span class="badge <?= $txn['type'] === 'in' ? 'ok' : 'out' ?>"><?= $txn['type'] === 'in' ? 'Stockin' : 'Stockout' ?></span>
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -217,7 +217,6 @@ $last_updated = $pdo->query("
                             <div class="low-stock-item">
                                 <div>
                                     <strong><?= htmlspecialchars($product['name']) ?></strong>
-                                    <span>Alert at <?= (int) $product['low_stock_threshold'] ?> units</span>
                                 </div>
                                 <span class="stock-count"> <?= (int) $product['quantity'] ?> left</span>
                             </div>
