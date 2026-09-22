@@ -93,6 +93,7 @@ if(!$supplier) {
   <div class="dashboard-layout">
     <aside class="sidebar">
       <div class="sidebar-brand"><p class="sidebar-kicker">IMS</p><h2>Menu</h2><p>Navigate the dashboard sections faster.</p></div>
+      <?php require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/sidebar_profile.php'; ?>
       <nav class="sidebar-nav" aria-label="Dashboard menu">
         <a href="/Project_IMS/dashboard.php">Dashboard</a>
         <div class="nav-item has-submenu"><button type="button" class="nav-parent" aria-expanded="false"><span>Products</span><svg class="chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><ul class="submenu"><li><a href="/Project_IMS/products/add.php">Add Product</a></li><li><a href="/Project_IMS/products/list.php">List Products</a></li></ul></div>
