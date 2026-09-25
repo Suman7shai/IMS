@@ -123,6 +123,7 @@ function formatCurrency($amount) {
                 <p>Navigate the dashboard sections faster.</p>
             </div>
 
+            <?php require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/sidebar_profile.php'; ?>
             <nav class="sidebar-nav" aria-label="Dashboard menu">
                 <a href="/Project_IMS/dashboard.php">Dashboard</a>
                 <div class="nav-item has-submenu">

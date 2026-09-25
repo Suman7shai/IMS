@@ -1,6 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.querySelector('.sidebar');
     if (sidebar) {
+        const listRoutes = {
+            Products: '/Project_IMS/products/list.php',
+            Categories: '/Project_IMS/categories/list.php',
+            Suppliers: '/Project_IMS/suppliers/list.php'
+        };
+
+        sidebar.querySelectorAll('.nav-item.has-submenu').forEach((navItem) => {
+            const menuButton = navItem.querySelector('.nav-parent');
+            const menuName = menuButton?.textContent.trim();
+            const listRoute = listRoutes[menuName];
+
+            if (!listRoute) {
+                return;
+            }
+
+            const listLink = document.createElement('a');
+            listLink.href = listRoute;
+            listLink.textContent = menuName;
+            navItem.replaceWith(listLink);
+        });
+
         const toggle = document.createElement('button');
         toggle.type = 'button';
         toggle.className = 'mobile-sidebar-toggle';
@@ -246,12 +267,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         els.activityList.innerHTML = sales.slice(0, 8).map((sale) => `
-            <div class="activity-item">
+            <div class="activity-item transaction-stockout">
                 <div>
                     <strong>${escapeHtml(sale.productName)}</strong>
-                    <span>${sale.quantity} unit(s) sold • ${formatDateTime(sale.timestamp)}</span>
+                    <span>${sale.quantity} unit(s) stockout • ${formatDateTime(sale.timestamp)}</span>
                 </div>
-                <span class="badge ${sale.stockAfter <= 10 ? 'low' : 'ok'}">Stock left: ${sale.stockAfter}</span>
+                <span class="badge out">Stockout</span>
             </div>
         `).join('');
     }
@@ -450,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     const ensureLogoutButton = () => {
-        let logoutBtn = document.getElementById('logoutBtn');
+        let logoutBtn = document.getElementById('logoutBtn') || document.querySelector('.sidebar .logout-btn');
 
         if (!logoutBtn) {
             logoutBtn = document.createElement('button');

@@ -69,6 +69,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                 <p>Navigate the dashboard sections faster.</p>
             </div>
 
+            <?php require $_SERVER['DOCUMENT_ROOT'] . '/Project_IMS/includes/sidebar_profile.php'; ?>
             <nav class="sidebar-nav" aria-label="Dashboard menu">
                 <a href="/Project_IMS/dashboard.php">Dashboard</a>
                 <div class="nav-item has-submenu">
@@ -245,8 +246,8 @@ unset($_SESSION['success'], $_SESSION['error']);
                                         </td>
                                         <td>
                                             <div class="action-group">
-                                                <a href="./products/edit.php?id=<?= (int)$product['id'] ?>" class="action-btn edit-btn">Edit</a>
-                                                <a href="./products/delete.php?id=<?= (int)$product['id'] ?>" class="action-btn delete-btn" data-confirm="Are you sure you want to delete this product?">Delete</a>
+                                                <a href="./edit.php?id=<?= (int)$product['id'] ?>" class="action-btn edit-btn">Edit</a>
+                                                <a href="./delete.php?id=<?= (int)$product['id'] ?>" class="action-btn delete-btn" data-confirm="Are you sure you want to delete this product?">Delete</a>
                                             </div>
                                         </td>
                                     </tr>

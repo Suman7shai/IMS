@@ -26,18 +26,10 @@ if (!is_valid_integer((string)$id)) {
   exit;
 }
 
-$stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM txns WHERE product_id = ?");
+$stmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
 $stmt->execute([$id]);
-$result = $stmt->fetch();
 
-if ($result['total'] > 0) {
-  $_SESSION['error'] = "Cannot delete this product";
-} else {
-  $stmt = $pdo->prepare("DELETE FROM products WHERE id = ?");
-  $stmt->execute([$id]);
-
-  $_SESSION['success'] = "Product deleted successfully";
-}
+$_SESSION['success'] = "Product deleted successfully";
 
 header("Location: list.php");
 exit;
