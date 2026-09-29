@@ -202,9 +202,9 @@ $last_updated = $pdo->query("
                             <div class="activity-item <?= $txn['type'] === 'in' ? 'transaction-stockin' : 'transaction-stockout' ?>">
                                 <div>
                                     <strong><?= htmlspecialchars($txn['product_name']) ?></strong>
-                                    <span><?= (int) $txn['quantity'] ?> unit(s) <?= $txn['type'] === 'in' ? 'stockin' : 'stockout' ?> by <?= htmlspecialchars($txn['full_name'] ?? 'Unknown user') ?> on <?= date('M d, Y h:i A', strtotime($txn['txn_date'])) ?></span>
+                                    <span><?= (int) $txn['quantity'] ?> unit(s) <?= $txn['type'] === 'in' ? 'Purchased' : 'Sold' ?> by <?= htmlspecialchars($txn['full_name'] ?? 'Unknown user') ?> on <?= date('M d, Y h:i A', strtotime($txn['txn_date'])) ?></span>
                                 </div>
-                                <span class="badge <?= $txn['type'] === 'in' ? 'ok' : 'out' ?>"><?= $txn['type'] === 'in' ? 'Stockin' : 'Stockout' ?></span>
+                                <span class="badge <?= $txn['type'] === 'in' ? 'ok' : 'out' ?>"><?= $txn['type'] === 'in' ? 'PURCHASED' : 'SOLD' ?></span>
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
