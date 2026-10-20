@@ -71,3 +71,5 @@ function is_valid_free_text(string $value, int $maxLength = 1000): bool
     return mb_strlen($value) <= $maxLength
         && preg_match('/^[\\p{L}\\p{N}\\s.,\'"!?()\\/\\&@:#%+\\-_]*$/u', $value) === 1;
 }
+
+?>

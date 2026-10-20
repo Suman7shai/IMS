@@ -12,10 +12,10 @@ if (!isset($_SESSION['user_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim((string)($_POST['name'] ?? ''));
     $description = trim((string)($_POST['description'] ?? ''));
-  $category_id = $_POST['category_id'] ?? null;
-  $supplier_id = $_POST['supplier_id'] ?? null;
-    $buy_price = $_POST['buy_price'] ?? '';
-    $sale_price = $_POST['sale_price'] ?? '';
+    $category_id = $_POST['category_id'] ?? null;
+    $supplier_id = $_POST['supplier_id'] ?? null;
+    $cost_price = $_POST['cost_price'] ?? '';
+    $selling_price = $_POST['selling_price'] ?? '';
     $quantity = $_POST['quantity'] ?? '';
   $low_stock_threshold = $_POST['low_stock_threshold'] ?? 10;
 
@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $supplier_id = null;
   }
 
-    if ($name === '' || $buy_price === '' || $sale_price === '' || $quantity === '') {
-        $_SESSION['error'] = "Product name, buy price, sale price, and quantity are required!";
+    if ($name === '' || $cost_price === '' || $selling_price === '' || $quantity === '') {
+        $_SESSION['error'] = "Product name, cost price, selling price, and quantity are required!";
     header("Location: add.php");
     exit;
   }
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if (!is_valid_decimal((string)$buy_price) || !is_valid_decimal((string)$sale_price)
+    if (!is_valid_decimal((string)$cost_price) || !is_valid_decimal((string)$selling_price)
         || !is_valid_integer((string)$quantity) || !is_valid_integer((string)$low_stock_threshold)) {
         $_SESSION['error'] = 'Prices and stock values must be valid non-negative numbers.';
         header("Location: add.php");
@@ -47,22 +47,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
   $stmt = $pdo->prepare(
-    "INSERT INTO products(name, description, category_id, price, buy_price, sale_price, quantity, low_stock_threshold, supplier_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    "INSERT INTO products(name, description, category_id, cost_price, selling_price, quantity, low_stock_threshold, supplier_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
   );
 
   $stmt->execute([
     $name,
     $description,
     $category_id,
-    $sale_price,
-    $buy_price,
-    $sale_price,
+    $cost_price,
+    $selling_price,
     $quantity,
     $low_stock_threshold,
     $supplier_id
   ]);
 
-  $_SESSION['success'] = "Product added successfully!";
+  $product_id = $pdo->lastInsertId();
+
+  if ($quantity > 0) {
+    $last = $pdo->query("
+      SELECT batch_number from txns
+      where batch_number like 'BATCH-%' . date('Y') . '-%'
+      order by id desc
+        limit 1
+    ")->fetch();
+
+    if ($last) {
+        $last_num = (int)substr($last['batch_number'], -3);
+        $new_num = str_pad($last_num + 1, 3, '0', STR_PAD_LEFT);
+    } else {
+        $new_num = '001';
+    }
+
+    $batch_number = 'BATCH-' . date('Y') . '-' . $new_num;
+
+    $stmt = $pdo->prepare(
+      "INSERT INTO txns(product_id, batch_number, quantity, unit_price, total_price, notes, txn_type) VALUES (?, ?, ?, ?, ?, ?, 'in')"
+    );
+
+    $stmt->execute([
+      $product_id,
+      $batch_number,
+      $quantity,
+      $cost_price,
+      $cost_price * $quantity,
+      'Initial stock entry with product registration'
+    ]);
+
+    $_SESSION['success'] = "Product added successfully with initial stock entry!";
+  } else {
+    $_SESSION['success'] = "Product added successfully!";
+  }
   header("Location: list.php");
   exit;
 }
@@ -73,6 +107,8 @@ $successMessage = $_SESSION['success'] ?? '';
 $errorMessage = $_SESSION['error'] ?? '';
 unset($_SESSION['success'], $_SESSION['error']);
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -206,13 +242,13 @@ unset($_SESSION['success'], $_SESSION['error']);
                         </div>
 
                         <div class="form-group">
-                            <label for="buy_price">Buy Unit Price</label>
-                            <input type="number" id="buy_price" name="buy_price" min="0" step="0.01" pattern="\d+(\.\d{1,2})?" placeholder="0.00" required>
+                            <label for="cost_price">Cost Price Per Unit</label>
+                            <input type="number" id="cost_price" name="cost_price" min="0" step="0.01" pattern="\d+(\.\d{1,2})?" placeholder="0.00" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="sale_price">Sale Unit Price</label>
-                            <input type="number" id="sale_price" name="sale_price" min="0" step="0.01" pattern="\d+(\.\d{1,2})?" placeholder="0.00" required>
+                            <label for="selling_price">Selling Price Per Unit</label>
+                            <input type="number" id="selling_price" name="selling_price" min="0" step="0.01" pattern="\d+(\.\d{1,2})?" placeholder="0.00" required>
                         </div>
 
                         <div class="form-group">
