@@ -203,7 +203,10 @@ unset($_SESSION['success'], $_SESSION['error']);
                                 <th>Product</th>
                                 <th>Category</th>
                                 <th>Supplier</th>
-                                <th>Price</th>
+                                <?php if ($_SESSION['role'] === 'admin'): ?>
+                                    <th>Cost Price</th>
+                                <?php endif; ?>
+                                <th>Selling Price</th>
                                 <th>Quantity</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -237,7 +240,10 @@ unset($_SESSION['success'], $_SESSION['error']);
                                         </td>
                                         <td><?= htmlspecialchars($product['category_name'] ?? 'Uncategorized') ?></td>
                                         <td><?= htmlspecialchars($product['supplier_name'] ?? 'N/A') ?></td>
-                                        <td class="price">Rs. <?= number_format((float)$product['price'], 2) ?></td>
+                                        <?php if ($_SESSION['role'] === 'admin'): ?>
+                                            <td>Rs. <?= number_format($product['cost_price'], 2) ?></td>
+                                        <?php endif; ?>
+                                        <td class="price">Rs. <?= number_format((float)$product['selling_price'], 2) ?></td>
                                         <td>
                                             <span class="stock-box <?= $quantity <= $threshold ? 'low' : '' ?>"><?= $quantity ?></span>
                                         </td>

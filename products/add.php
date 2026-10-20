@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if ($quantity > 0) {
     $last = $pdo->query("
       SELECT batch_number from txns
-      where batch_number like 'BATCH-%' . date('Y') . '-%'
+      where batch_number like 'BATCH-%" . date('Y') . "-%'
       order by id desc
         limit 1
     ")->fetch();
@@ -81,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $batch_number = 'BATCH-' . date('Y') . '-' . $new_num;
 
     $stmt = $pdo->prepare(
-      "INSERT INTO txns(product_id, batch_number, quantity, unit_price, total_price, notes, txn_type) VALUES (?, ?, ?, ?, ?, ?, 'in')"
+      "INSERT INTO txns(product_id, batch_number, quantity, unit_price, total_price, notes, type) VALUES (?, ?, ?, ?, ?, ?, 'in')"
     );
 
     $stmt->execute([
