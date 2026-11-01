@@ -18,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim((string)($_POST['name'] ?? ''));
     $description = trim((string)($_POST['description'] ?? ''));
   $category_id = $_POST['category_id'] ?? null;
-    $buy_price = $_POST['buy_price'] ?? '';
-    $sale_price = $_POST['sale_price'] ?? '';
+    $cost_price = $_POST['cost_price'] ?? '';
+    $selling_price = $_POST['selling_price'] ?? '';
     $quantity = $_POST['quantity'] ?? '';
   $low_stock_threshold = $_POST['low_stock_threshold'] ?? 10;
   $supplier_id = $_POST['supplier_id'] ?? null;
@@ -32,8 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $supplier_id = null;
   }
 
-    if ($name === '' || $buy_price === '' || $sale_price === '' || $quantity === '') {
-        $_SESSION['error'] = "Product name, buy price, sale price, and quantity are required!";
+    if ($name === '' || $cost_price === '' || $selling_price === '' || $quantity === '') {
+        $_SESSION['error'] = "Product name, cost price, selling price, and quantity are required!";
     header("Location: edit.php?id=" . $id);
     exit;
   }
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if (!is_valid_decimal((string)$buy_price) || !is_valid_decimal((string)$sale_price)
+    if (!is_valid_decimal((string)$cost_price) || !is_valid_decimal((string)$selling_price)
         || !is_valid_integer((string)$quantity) || !is_valid_integer((string)$low_stock_threshold)) {
         $_SESSION['error'] = 'Prices and stock values must be valid non-negative numbers.';
         header("Location: edit.php?id=" . $id);
@@ -52,10 +52,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
   $stmt = $pdo->prepare(
-        "UPDATE products SET name = ?, description = ?, category_id = ?, price = ?, buy_price = ?, sale_price = ?, quantity = ?, low_stock_threshold = ?, supplier_id = ? WHERE id = ?"
+        "UPDATE products SET name = ?, description = ?, category_id = ?, cost_price = ?, selling_price = ?, quantity = ?, low_stock_threshold = ?, supplier_id = ? WHERE id = ?"
   );
 
-    $stmt->execute([$name, $description, $category_id, $sale_price, $buy_price, $sale_price, $quantity, $low_stock_threshold, $supplier_id, $id]);
+    $stmt->execute([$name, $description, $category_id, $cost_price, $selling_price, $quantity, $low_stock_threshold, $supplier_id, $id]);
 
   $_SESSION['success'] = "Product updated successfully!";
   header("Location: list.php");
@@ -95,6 +95,7 @@ unset($_SESSION['success'], $_SESSION['error']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product | IMS</title>
+    <link rel="icon" type="image/png" href="/Project_IMS/assests/img/StockSync-transparent.png">
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/products_add.css">
@@ -149,8 +150,8 @@ unset($_SESSION['success'], $_SESSION['error']);
                     </ul>
                 </div>
                 <?php endif; ?>
-                <a href="/Project_IMS/transactions/stock_in.php">Stock In</a>
-                <a href="/Project_IMS/transactions/stock_out.php">Stock Out</a>
+                <a href="/Project_IMS/transactions/stock_in.php">Return Product</a>
+                <a href="/Project_IMS/transactions/stock_out.php">Sales</a>
                 <a href="/Project_IMS/reports/index.php">Reports</a>
                 <?php if ($_SESSION['role'] === 'admin'): ?><a href="/Project_IMS/users/list.php">Users</a><?php endif; ?>
             </nav>
@@ -228,13 +229,13 @@ unset($_SESSION['success'], $_SESSION['error']);
                         </div>
 
                         <div class="form-group">
-                            <label for="buy_price">Buy Unit Price</label>
-                            <input type="number" id="buy_price" name="buy_price" min="0" step="0.01" pattern="\d+(\.\d{1,2})?" value="<?= htmlspecialchars((string)$product['buy_price']) ?>" required>
+                            <label for="cost_price">Cost Price Per Unit</label>
+                            <input type="number" id="cost_price" name="cost_price" min="0" step="0.01" pattern="\d+(\.\d{1,2})?" value="<?= htmlspecialchars((string)$product['cost_price']) ?>" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="sale_price">Sale Unit Price</label>
-                            <input type="number" id="sale_price" name="sale_price" min="0" step="0.01" pattern="\d+(\.\d{1,2})?" value="<?= htmlspecialchars((string)$product['sale_price']) ?>" required>
+                            <label for="selling_price">Selling Price Per Unit</label>
+                            <input type="number" id="selling_price" name="selling_price" min="0" step="0.01" pattern="\d+(\.\d{1,2})?" value="<?= htmlspecialchars((string)$product['selling_price']) ?>" required>
                         </div>
 
                         <div class="form-group">

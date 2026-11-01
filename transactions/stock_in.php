@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-$products = $pdo->query("SELECT id, name, quantity, price, buy_price FROM products ORDER BY name")->fetchAll();
+$products = $pdo->query("SELECT id, name, quantity, cost_price FROM products ORDER BY name")->fetchAll();
 $suppliers = $pdo->query("SELECT name FROM suppliers ORDER BY name")->fetchAll();
 $stockInTransactions = $pdo->query("SELECT t.*, p.name AS product_name, u.full_name FROM txns t LEFT JOIN products p ON t.product_id = p.id LEFT JOIN users u ON t.user_id = u.id WHERE t.type = 'in' ORDER BY t.txn_date DESC")->fetchAll();
 $totalStockInQuantity = 0;
@@ -108,7 +108,8 @@ unset($_SESSION['success'], $_SESSION['error']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock In | IMS</title>
+    <title>Return Product | IMS</title>
+    <link rel="icon" type="image/png" href="/Project_IMS/assests/img/StockSync-transparent.png">
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/stockin.css">
@@ -147,8 +148,8 @@ unset($_SESSION['success'], $_SESSION['error']);
                     </ul>
                 </div>
                 <?php endif; ?>
-                <a href="/Project_IMS/transactions/stock_in.php">Stock In</a>
-                <a href="/Project_IMS/transactions/stock_out.php">Stock Out</a>
+                <a href="/Project_IMS/transactions/stock_in.php">Return Product</a>
+                <a href="/Project_IMS/transactions/stock_out.php">Sales</a>
                 <a href="/Project_IMS/reports/index.php">Reports</a>
                 <?php if ($_SESSION['role'] === 'admin'): ?><a href="/Project_IMS/users/list.php">Users</a><?php endif; ?>
             </nav>
@@ -163,8 +164,8 @@ unset($_SESSION['success'], $_SESSION['error']);
             <header class="dashboard-header">
                 <div>
                     <p class="eyebrow">Inventory</p>
-                    <h1>Stock In</h1>
-                    <p class="subtitle">Record incoming inventory and update warehouse stock in one step.</p>
+                    <h1>Return Product</h1>
+                    <p class="subtitle">Record returned products and update warehouse stock in one step.</p>
                 </div>
                 <div class="header-metrics">
                     <div class="metric-card">
@@ -185,7 +186,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                 <div class="panel-head">
                     <div>
                         <p class="panel-tag">Stock Movement</p>
-                        <h2>Record Stock In</h2>
+                        <h2>Return Product</h2>
                     </div>
                 </div>
 
@@ -213,7 +214,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                             <select name="product_id[]" required>
                                 <option value="">Select a product</option>
                                 <?php foreach ($products as $product): ?>
-                                    <option value="<?= (int)$product['id'] ?>" data-price="<?= htmlspecialchars($product['buy_price']) ?>"><?= htmlspecialchars($product['name']) ?> (Current: <?= (int)$product['quantity'] ?>)</option>
+                                    <option value="<?= (int)$product['id'] ?>" data-price="<?= htmlspecialchars($product['cost_price']) ?>"><?= htmlspecialchars($product['name']) ?> (Current: <?= (int)$product['quantity'] ?>)</option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -239,7 +240,7 @@ unset($_SESSION['success'], $_SESSION['error']);
 
                     <div class="submit-row">
                         <a href="/Project_IMS/dashboard.php" class="secondary-btn">Cancel</a>
-                        <button type="submit" class="primary-btn">Save Stock In</button>
+                        <button type="submit" class="primary-btn">Save Return</button>
                     </div>
                 </form>
             </section>
@@ -247,7 +248,7 @@ unset($_SESSION['success'], $_SESSION['error']);
             <section class="stock-in-history">
                 <div class="panel-head">
                     <div>
-                        <p class="panel-tag">Stock In</p>
+                        <p class="panel-tag">Return Product</p>
                         <h2>History</h2>
                     </div>
                 </div>

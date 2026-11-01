@@ -57,6 +57,7 @@ $last_updated = $pdo->query("
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IMS</title>
+    <link rel="icon" type="image/png" href="/Project_IMS/assests/img/StockSync-transparent.png">
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css?v=<?= filemtime(__DIR__ . '/assests/css/dashboard.css') ?>">
     <link rel="stylesheet" href="/Project_IMS/assests/css/modal.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sale-modal.css">
@@ -125,8 +126,8 @@ $last_updated = $pdo->query("
                 </ul>
             </div>
             <?php endif; ?>
-            <a href="./transactions/stock_in.php">Stock In</a>
-            <a href="./transactions/stock_out.php">Stock Out</a>
+            <a href="./transactions/stock_in.php">Return Product</a>
+            <a href="./transactions/stock_out.php">Sales</a>
             <a href="./reports/index.php">Reports</a>
             <?php if ($_SESSION['role'] === 'admin'): ?>
             <a href="./users/list.php">Users</a>

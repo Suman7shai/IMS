@@ -29,6 +29,7 @@ body {
     font-family: 'poppins', sans-serif;
     min-height: 100vh;
     color: var(--ink);
+    position: relative;
     background:
         radial-gradient(circle at top left, rgba(255, 255, 255, 0.95), transparent 28%),
         radial-gradient(circle at bottom right, rgba(255, 229, 196, 0.45), transparent 26%),
@@ -37,7 +38,20 @@ body {
     scroll-behavior: smooth;
 }
 
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: url('/Project_IMS/assests/img/StockSync-transparent.png') center / min(700px, 72vw) auto no-repeat;
+    opacity: 0.32;
+    mix-blend-mode: multiply;
+}
+
 .dashboard-layout {
+    position: relative;
+    z-index: 1;
     width: min(1600px, 100%);
     margin: 0 auto;
     display: grid;

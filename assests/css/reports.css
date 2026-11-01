@@ -231,6 +231,17 @@
                 background: #fff;
                 padding: 0;
                 color: #0f172a;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            body::before {
+                display: block;
+                z-index: 0;
+                background: url('/Project_IMS/assests/img/StockSync-transparent.png') center / min(700px, 72vw) auto no-repeat;
+                opacity: 0.2;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
 
             .sidebar,

@@ -15,7 +15,7 @@ $product_id = $_GET['product_id'] ?? '';
 $supplier_id = $_GET['supplier_id'] ?? '';
 
 $query = "
-    SELECT t.*, p.name AS product_name, p.buy_price, p.sale_price, u.full_name
+    SELECT t.*, p.name AS product_name, p.cost_price, p.selling_price, u.full_name
     FROM txns t
     LEFT JOIN products p ON t.product_id = p.id
     LEFT JOIN users u ON t.user_id = u.id
@@ -74,7 +74,7 @@ foreach ($transactions as $transaction) {
     } elseif (strtolower((string)($transaction['type'] ?? '')) === 'out') {
         $total_out += $quantity;
         $total_out_value += $value;
-        $buyPrice = (float)($transaction['buy_price'] ?? 0);
+        $buyPrice = (float)($transaction['cost_price'] ?? 0);
         $profit_detail_rows[] = [
             'date' => date('Y-m-d', strtotime($transaction['txn_date'])),
             'product_name' => $transaction['product_name'] ?? 'Unknown Product',
@@ -110,6 +110,7 @@ function formatCurrency($amount) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports | IMS</title>
+    <link rel="icon" type="image/png" href="/Project_IMS/assests/img/StockSync-transparent.png">
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/reports.css">
@@ -164,8 +165,8 @@ function formatCurrency($amount) {
                     </ul>
                 </div>
                 <?php endif; ?>
-                <a href="/Project_IMS/transactions/stock_in.php">Stock In</a>
-                <a href="/Project_IMS/transactions/stock_out.php">Stock Out</a>
+                <a href="/Project_IMS/transactions/stock_in.php">Return Product</a>
+                <a href="/Project_IMS/transactions/stock_out.php">Sales</a>
                 <a href="/Project_IMS/reports/index.php">Reports</a>
                 <?php if ($_SESSION['role'] === 'admin'): ?><a href="/Project_IMS/users/list.php">Users</a><?php endif; ?>
             </nav>
@@ -199,11 +200,11 @@ function formatCurrency($amount) {
 
             <section class="report-summary">
                 <article class="stat-card">
-                    <span>Total Stock In</span>
+                    <span>Total Returns</span>
                     <strong><?= $total_in ?></strong>
                 </article>
                 <article class="stat-card">
-                    <span>Total Stock Out</span>
+                    <span>Total Sales</span>
                     <strong><?= $total_out ?></strong>
                 </article>
                 <article class="stat-card">
@@ -233,7 +234,7 @@ function formatCurrency($amount) {
                         </thead>
                         <tbody>
                             <?php if (!$profit_detail_rows): ?>
-                                <tr><td colspan="8">No Stock Out transactions available for profit/loss.</td></tr>
+                                <tr><td colspan="8">No sales transactions available for profit/loss.</td></tr>
                             <?php else: ?>
                                 <?php foreach ($profit_detail_rows as $profitRow): ?>
                                     <tr>
@@ -263,8 +264,8 @@ function formatCurrency($amount) {
                         Type
                         <select name="type">
                             <option value="">All</option>
-                            <option value="in" <?= $type === 'in' ? 'selected' : '' ?>>Stock In</option>
-                            <option value="out" <?= $type === 'out' ? 'selected' : '' ?>>Stock Out</option>
+                            <option value="in" <?= $type === 'in' ? 'selected' : '' ?>>Return Product</option>
+                            <option value="out" <?= $type === 'out' ? 'selected' : '' ?>>Sales</option>
                         </select>
                     </label>
 

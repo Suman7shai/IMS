@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-$products = $pdo->query("SELECT id, name, quantity, price, sale_price FROM products ORDER BY name")->fetchAll();
+$products = $pdo->query("SELECT id, name, quantity, selling_price FROM products ORDER BY name")->fetchAll();
 $stockOutTransactions = $pdo->query("SELECT t.*, p.name AS product_name, u.full_name FROM txns t LEFT JOIN products p ON t.product_id = p.id LEFT JOIN users u ON t.user_id = u.id WHERE t.type = 'out' ORDER BY t.txn_date DESC")->fetchAll();
 $totalStockOutQuantity = 0;
 $totalStockOutAmount = 0;
@@ -120,7 +120,8 @@ unset($_SESSION['success'], $_SESSION['error']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Out | IMS</title>
+    <title>Sales | IMS</title>
+    <link rel="icon" type="image/png" href="/Project_IMS/assests/img/StockSync-transparent.png">
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/stockout.css">
@@ -159,8 +160,8 @@ unset($_SESSION['success'], $_SESSION['error']);
                     </ul>
                 </div>
                 <?php endif; ?>
-                <a href="/Project_IMS/transactions/stock_in.php">Stock In</a>
-                <a href="/Project_IMS/transactions/stock_out.php">Stock Out</a>
+                <a href="/Project_IMS/transactions/stock_in.php">Return Product</a>
+                <a href="/Project_IMS/transactions/stock_out.php">Sales</a>
                 <a href="/Project_IMS/reports/index.php">Reports</a>
                 <?php if ($_SESSION['role'] === 'admin'): ?><a href="/Project_IMS/users/list.php">Users</a><?php endif; ?>
             </nav>
@@ -175,8 +176,8 @@ unset($_SESSION['success'], $_SESSION['error']);
             <header class="dashboard-header">
                 <div>
                     <p class="eyebrow">Inventory</p>
-                    <h1>Stock Out</h1>
-                    <p class="subtitle">Record outgoing stock and keep the inventory ledger accurate.</p>
+                    <h1>Sales</h1>
+                    <p class="subtitle">Record sales and keep the inventory ledger accurate.</p>
                 </div>
                 <div class="header-metrics">
                     <div class="metric-card">
@@ -197,7 +198,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                 <div class="panel-head">
                     <div>
                         <p class="panel-tag">Stock Movement</p>
-                        <h2>Record Stock Out</h2>
+                        <h2>Record Sale</h2>
                     </div>
                 </div>
 
@@ -214,7 +215,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                                 <select name="product_id[]" required>
                                     <option value="">Select a product</option>
                                     <?php foreach ($products as $product): ?>
-                                        <option value="<?= (int)$product['id'] ?>" data-price="<?= htmlspecialchars($product['sale_price']) ?>"><?= htmlspecialchars($product['name']) ?> (Available: <?= (int)$product['quantity'] ?>)</option>
+                                        <option value="<?= (int)$product['id'] ?>" data-price="<?= htmlspecialchars($product['selling_price']) ?>"><?= htmlspecialchars($product['name']) ?> (Available: <?= (int)$product['quantity'] ?>)</option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -237,7 +238,7 @@ unset($_SESSION['success'], $_SESSION['error']);
 
                     <div class="submit-row">
                         <a href="/Project_IMS/dashboard.php" class="secondary-btn">Cancel</a>
-                        <button type="submit" class="primary-btn">Save Stock Out</button>
+                        <button type="submit" class="primary-btn">Save Sale</button>
                     </div>
                 </form>
             </section>
@@ -247,7 +248,7 @@ unset($_SESSION['success'], $_SESSION['error']);
                 <div class="stock-out-invoice-head">
                     <div>
                         <p class="panel-tag">IMS</p>
-                        <h2>StockSync Stock Out Invoice</h2>
+                        <h2>StockSync Sales Invoice</h2>
                         <span><?= date('Y-m-d H:i') ?></span>
                     </div>
                     <div class="invoice-customer"><strong>Customer:</strong> <?= htmlspecialchars($lastInvoiceCustomer ?: 'Walk-in Customer') ?></div>
@@ -278,7 +279,7 @@ unset($_SESSION['success'], $_SESSION['error']);
             <section class="stock-out-history">
                 <div class="panel-head">
                     <div>
-                        <p class="panel-tag">Stock Out</p>
+                        <p class="panel-tag">Sales</p>
                         <h2>History</h2>
                     </div>
                 </div>

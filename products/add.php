@@ -64,29 +64,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $product_id = $pdo->lastInsertId();
 
   if ($quantity > 0) {
-    $last = $pdo->query("
-      SELECT batch_number from txns
-      where batch_number like 'BATCH-%" . date('Y') . "-%'
-      order by id desc
-        limit 1
-    ")->fetch();
-
-    if ($last) {
-        $last_num = (int)substr($last['batch_number'], -3);
-        $new_num = str_pad($last_num + 1, 3, '0', STR_PAD_LEFT);
-    } else {
-        $new_num = '001';
-    }
-
-    $batch_number = 'BATCH-' . date('Y') . '-' . $new_num;
-
     $stmt = $pdo->prepare(
-      "INSERT INTO txns(product_id, batch_number, quantity, unit_price, total_price, notes, type) VALUES (?, ?, ?, ?, ?, ?, 'in')"
+      "INSERT INTO txns(product_id, quantity, unit_price, total_price, notes, type) VALUES (?, ?, ?, ?, ?, 'in')"
     );
 
     $stmt->execute([
       $product_id,
-      $batch_number,
       $quantity,
       $cost_price,
       $cost_price * $quantity,
@@ -115,6 +98,7 @@ unset($_SESSION['success'], $_SESSION['error']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product | IMS</title>
+    <link rel="icon" type="image/png" href="/Project_IMS/assests/img/StockSync-transparent.png">
     <link rel="stylesheet" href="/Project_IMS/assests/css/dashboard.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/sidebar-submenu.css">
     <link rel="stylesheet" href="/Project_IMS/assests/css/products_add.css">
@@ -169,8 +153,8 @@ unset($_SESSION['success'], $_SESSION['error']);
                     </ul>
                 </div>
                 <?php endif; ?>
-                <a href="/Project_IMS/transactions/stock_in.php">Stock In</a>
-                <a href="/Project_IMS/transactions/stock_out.php">Stock Out</a>
+                <a href="/Project_IMS/transactions/stock_in.php">Return Product</a>
+                <a href="/Project_IMS/transactions/stock_out.php">Sales</a>
                 <a href="/Project_IMS/reports/index.php">Reports</a>
                 <?php if ($_SESSION['role'] === 'admin'): ?><a href="/Project_IMS/users/list.php">Users</a><?php endif; ?>
             </nav>

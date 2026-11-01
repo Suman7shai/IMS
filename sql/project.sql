@@ -76,10 +76,3 @@ VALUES (
     'admin63@gmail.com',
     'admin'
 );
-
-
-
-alter table products
-add column cost_price decimal(10,2) not null default 0.0 after price,
-add column selling_price decimal(10,2) not null default 0.0 after cost_price,
-drop column price;
